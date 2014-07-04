@@ -4,6 +4,7 @@
 #import "GameKitHelper.h"
 
 #include "HoldOnHome.h"
+#include "HoldOnModel.h"
 
 USING_NS_CC;
 
@@ -31,13 +32,16 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //GameCenter登陆
     [[GameKitHelper sharedGameKitHelper] authenticateLocalUser];
     
+    //播放背景音乐
+    HoldOnModel::shareModel()->playEffect(KEffectTypeBackground);
+    
     // create a scene. it's an autorelease object
     CCScene *pScene = HoldOnHome::scene();
 //    CCScene *pScene = HelloWorld::scene();
 
     // run
     pDirector->runWithScene(pScene);
-
+    
     return true;
 }
 

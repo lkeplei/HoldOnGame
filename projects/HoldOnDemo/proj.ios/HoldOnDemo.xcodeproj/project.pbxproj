@@ -336,6 +336,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0407C504196754A700E8B7F3 /* HoldOnModelDef.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HoldOnModelDef.h; sourceTree = "<group>"; };
 		15A3D87E1682F7B3002FB0C5 /* cocos2dx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2dx.xcodeproj; path = ../../../cocos2dx/proj.ios/cocos2dx.xcodeproj; sourceTree = "<group>"; };
 		15A3D8891682F7D5002FB0C5 /* Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2D.h; sourceTree = "<group>"; };
 		15A3D88B1682F7D5002FB0C5 /* b2BroadPhase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2BroadPhase.cpp; sourceTree = "<group>"; };
@@ -1460,6 +1461,7 @@
 			children = (
 				18CB758B19669A7800407C7F /* HoldOnModel.h */,
 				18CB758C19669A8200407C7F /* HoldOnModel.mm */,
+				0407C504196754A700E8B7F3 /* HoldOnModelDef.h */,
 			);
 			path = model;
 			sourceTree = "<group>";

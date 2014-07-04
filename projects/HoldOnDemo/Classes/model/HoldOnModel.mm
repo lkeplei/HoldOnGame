@@ -35,22 +35,41 @@ void HoldOnModel::showGameCenterLoader(){
 }
 
 #pragma mark - music
-unsigned int HoldOnModel::playEffect(const char* pszFilePath, bool bLoop){
-    return CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(pszFilePath, bLoop);
-}
-
-void HoldOnModel::playBackgroundMusic(const char* pszFilePath, bool bLoop){
-    CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic(pszFilePath, bLoop);
-}
-
-void HoldOnModel::stopEffect(unsigned int nSoundId){
-    CocosDenshion::SimpleAudioEngine::sharedEngine()->stopEffect(nSoundId);
-}
-
-void HoldOnModel::stopAllEffects(){
-    CocosDenshion::SimpleAudioEngine::sharedEngine()->stopAllEffects();
-}
-
-void HoldOnModel::stopBackgroundMusic(bool bReleaseData){
-    CocosDenshion::SimpleAudioEngine::sharedEngine()->stopBackgroundMusic(bReleaseData);
+void HoldOnModel::playEffect(HoldOnEffectType type){
+    switch (type) {
+        case KEffectTypeAnJian:{
+            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_an_jian.mp3");
+        }
+            break;
+        case KEffectTypeCollision:{
+            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_collision.mp3");
+        }
+            break;
+        case KEffectTypeGameOver:{
+            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_game_over.mp3");
+        }
+            break;
+        case KEffectTypeNewRecorder:{
+            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_new_recorder.mp3");
+        }
+            break;
+        case KEffectTypeNumberRoll:{
+            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_number_roll.mp3");
+        }
+            break;
+        case KEffectTypeTime:{
+            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_time.mp3");
+        }
+            break;
+        case KEffectTypeUpgrade:{
+            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_upgrade.mp3");
+        }
+            break;
+        case KEffectTypeBackground:{
+            CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("effect_background.mp3", true);
+        }
+            break;
+        default:
+            break;
+    }
 }

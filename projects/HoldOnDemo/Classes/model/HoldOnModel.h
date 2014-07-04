@@ -10,6 +10,7 @@
 #define  _HOLDONMODEL_H_
 
 #include "cocos2d.h"
+#include "HoldOnModelDef.h"
 
 class  HoldOnModel
 {
@@ -23,11 +24,7 @@ public:
     void showGameCenterLoader();
     
     //music         参考：http://www.2cto.com/kf/201306/217740.html
-    unsigned int playEffect(const char* pszFilePath, bool bLoop = false);
-    void playBackgroundMusic(const char* pszFilePath, bool bLoop = false);
-    void stopEffect(unsigned int nSoundId);
-    void stopAllEffects();
-    void stopBackgroundMusic(bool bReleaseData = false);
+    void playEffect(HoldOnEffectType type);
 };
 
 #endif // _HOLDONMODEL_H_
