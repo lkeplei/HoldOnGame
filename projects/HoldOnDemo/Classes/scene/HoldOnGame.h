@@ -27,6 +27,8 @@ public:
     CREATE_FUNC(HoldOnGame);
     
 public:
+    void timerAnimation();
+    
     // a selector callback
     void menuBack(CCObject* pSender);
 
@@ -41,8 +43,12 @@ public:
     virtual void draw();
 private:
     void startGame();
+    void gameOver();
     void createB2world();
     void createGameElement();
+    
+    void updateScoreLevel(float delta);
+    void updateBody(float delta);
     
     b2World* gameWorld;
     CCSprite* playerBall;

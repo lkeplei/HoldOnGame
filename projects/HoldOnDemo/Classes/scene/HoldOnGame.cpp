@@ -8,8 +8,16 @@
 
 #include "HoldOnGame.h"
 #include "HoldOnHome.h"
+#include "HoldOnModel.h"
 #include "KenGameUtils.h"
 #include "HoldOnConfig.h"
+
+#define KGameElement1        1001
+#define KGameElement2        1002
+#define KGameElement3        1003
+#define KGameElement4        1004
+
+#define KGameTimerTag        2001
 
 CCScene* HoldOnGame::scene(){
     CCScene * scene = NULL;
@@ -49,6 +57,7 @@ bool HoldOnGame::init(){
         
         this->createGameElement();
         this->createB2world();
+        this->timerAnimation();
         
         bRet = true;
     } while (0);
@@ -57,6 +66,47 @@ bool HoldOnGame::init(){
 }
 
 #pragma mark - private method
+void HoldOnGame::timerAnimation(){
+    static int step = 1;
+    CCLog("timerAnimation step = %d", step);
+    
+    CCSprite* timer = (CCSprite*)this->getChildByTag(KGameTimerTag);
+    if (timer) {
+        timer->removeFromParentAndCleanup(true);
+        timer = NULL;
+    }
+    
+    if (step == 5) {
+        this->startGame();
+    } else {
+        CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+        switch (step) {
+            case 1:
+                timer = KenGameUtils::createSprite("game_time_1.png", ccp(320, winSize.height - 386));
+                break;
+            case 2:
+                timer = KenGameUtils::createSprite("game_time_2.png", ccp(320, winSize.height - 386));
+                break;
+            case 3:
+                timer = KenGameUtils::createSprite("game_time_3.png", ccp(320, winSize.height - 386));
+                break;
+            case 4:
+                timer = KenGameUtils::createSprite("game_go.png", ccp(320, winSize.height - 386));
+                break;
+            default:
+                break;
+        }
+        this->addChild(timer, timer->getZOrder(), KGameTimerTag);
+        
+        CCCallFuncN* callbakc = CCCallFuncN::create(this, callfuncN_selector(HoldOnGame::timerAnimation));
+        CCScaleTo* actionScaleTo = CCScaleTo::create(1, 1.3);
+        CCSequence* actionSeq = CCSequence::create(actionScaleTo, callbakc, NULL);
+        timer->runAction(actionSeq);
+        
+        step++;
+    }
+}
+
 void HoldOnGame::createB2world(){
     this->scheduleUpdate();
     this->setTouchEnabled(true);
@@ -120,14 +170,18 @@ void HoldOnGame::createGameElement(){
     
     playerBall = KenGameUtils::createSprite("game_circle.png", ccp(320, winSize.height - 550));
     this->addChild(playerBall);
-    this->addChild(KenGameUtils::createSprite("game_rectangle_ vertical.png", ccp(50, winSize.height - 270)), playerBall->getZOrder(), 1001);
-    this->addChild(KenGameUtils::createSprite("game_rectangle_horizontal.png", ccp(510, winSize.height - 190)), playerBall->getZOrder(), 1002);
-    this->addChild(KenGameUtils::createSprite("game_triangle.png", ccp(110, winSize.height - 861)), playerBall->getZOrder(), 1003);
-    this->addChild(KenGameUtils::createSprite("game_square.png", ccp(535, winSize.height - 855)), playerBall->getZOrder(), 1004);
+    this->addChild(KenGameUtils::createSprite("game_rectangle_ vertical.png", ccp(50, winSize.height - 270)),
+                   playerBall->getZOrder(), KGameElement1);
+    this->addChild(KenGameUtils::createSprite("game_rectangle_horizontal.png", ccp(510, winSize.height - 190)),
+                   playerBall->getZOrder(), KGameElement2);
+    this->addChild(KenGameUtils::createSprite("game_triangle.png", ccp(110, winSize.height - 861)), playerBall->getZOrder(), KGameElement3);
+    this->addChild(KenGameUtils::createSprite("game_square.png", ccp(535, winSize.height - 855)), playerBall->getZOrder(), KGameElement4);
 }
 
 void HoldOnGame::startGame(){
-    for (int i = 1001; i <= 1004; i++) {
+    HoldOnModel::shareModel()->resetLevelScore();
+    
+    for (int i = KGameElement1; i <= KGameElement4; i++) {
         CCSprite* sprite = (CCSprite*)this->getChildByTag(i);
         if (sprite) {
             //add box2d body
@@ -158,16 +212,16 @@ void HoldOnGame::startGame(){
 
 #pragma mark - parent method
 void HoldOnGame::update(float delta){
-    static float testNumber = 0;
-    
-    if (testNumber > 3 && testNumber < 9) {
-        testNumber = 10;
-        this->startGame();
-    } else {
-        testNumber += delta;
-    }
-    
     CCLOG("update delta = %f", delta);
+    this->updateScoreLevel(delta);
+    this->updateBody(delta);
+}
+
+void HoldOnGame::updateScoreLevel(float delta){
+    
+}
+
+void HoldOnGame::updateBody(float delta){
     int32 velocityIterations = 8;
     int32 positionIterations = 8;
     // Instruct the world to perform a single step of simulation.
@@ -235,8 +289,3 @@ void HoldOnGame::draw(){
     
     kmGLPopMatrix();
 }
-
-
-
-
-

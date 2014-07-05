@@ -27,6 +27,16 @@ public:
     void playEffect(HoldOnEffectType type);
     void closeEffect();
     void openEffect();
+    
+    void resetLevelScore();
+    void upgrade();
+    uint32_t getGameLevel();
+    void countScore();
+    double getGameScore();
+    
+private:
+    uint32_t gameLevel;
+    double gameScore;
 };
 
 #endif // _HOLDONMODEL_H_

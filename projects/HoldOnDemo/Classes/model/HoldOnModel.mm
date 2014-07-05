@@ -21,7 +21,10 @@ HoldOnModel* HoldOnModel::shareModel(){
     return s_ShareModel;
 }
 
-HoldOnModel::HoldOnModel(){
+HoldOnModel::HoldOnModel()
+: gameScore(0)
+, gameLevel(1)
+{
     
 };
 
@@ -80,4 +83,27 @@ void HoldOnModel::closeEffect(){
 
 void HoldOnModel::openEffect(){
     playEffect(KEffectTypeBackground);
+}
+
+#pragma mark - score
+void HoldOnModel::resetLevelScore(){
+    gameLevel = 1;
+    gameScore = 0;
+}
+
+void HoldOnModel::upgrade(){
+    this->countScore();
+    gameLevel++;
+}
+
+uint32_t HoldOnModel::getGameLevel(){
+    return gameLevel;
+}
+
+void HoldOnModel::countScore(){
+    gameScore += gameLevel * 100;
+}
+
+double HoldOnModel::getGameScore(){
+    return gameScore;
 }
