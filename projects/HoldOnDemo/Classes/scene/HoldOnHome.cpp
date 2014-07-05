@@ -99,6 +99,8 @@ void HoldOnHome::menuOpenSound(CCObject* pSender){
     item->setVisible(true);
     item = (CCMenuItemImage*)menu->getChildByTag(2005);
     item->setVisible(false);
+    
+    HoldOnModel::shareModel()->closeEffect();
 }
 
 void HoldOnHome::menuCloseSound(CCObject* pSender){
@@ -109,4 +111,6 @@ void HoldOnHome::menuCloseSound(CCObject* pSender){
     item->setVisible(false);
     item = (CCMenuItemImage*)menu->getChildByTag(2005);
     item->setVisible(true);
+    
+    HoldOnModel::shareModel()->openEffect();
 }

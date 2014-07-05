@@ -73,3 +73,11 @@ void HoldOnModel::playEffect(HoldOnEffectType type){
             break;
     }
 }
+
+void HoldOnModel::closeEffect(){
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
+}
+
+void HoldOnModel::openEffect(){
+    playEffect(KEffectTypeBackground);
+}
