@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0474DD8D19695C56003B99D8 /* app_font_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0474DD8B19695C56003B99D8 /* app_font_small.png */; };
+		0474DD8E19695C56003B99D8 /* app_font_big.png in Resources */ = {isa = PBXBuildFile; fileRef = 0474DD8C19695C56003B99D8 /* app_font_big.png */; };
 		15A3D8FF1682F7D5002FB0C5 /* b2BroadPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15A3D88B1682F7D5002FB0C5 /* b2BroadPhase.cpp */; };
 		15A3D9001682F7D5002FB0C5 /* b2CollideCircle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15A3D88D1682F7D5002FB0C5 /* b2CollideCircle.cpp */; };
 		15A3D9011682F7D5002FB0C5 /* b2CollideEdge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15A3D88E1682F7D5002FB0C5 /* b2CollideEdge.cpp */; };
@@ -337,6 +339,8 @@
 
 /* Begin PBXFileReference section */
 		0407C504196754A700E8B7F3 /* HoldOnModelDef.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HoldOnModelDef.h; sourceTree = "<group>"; };
+		0474DD8B19695C56003B99D8 /* app_font_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_font_small.png; sourceTree = "<group>"; };
+		0474DD8C19695C56003B99D8 /* app_font_big.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_font_big.png; sourceTree = "<group>"; };
 		15A3D87E1682F7B3002FB0C5 /* cocos2dx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2dx.xcodeproj; path = ../../../cocos2dx/proj.ios/cocos2dx.xcodeproj; sourceTree = "<group>"; };
 		15A3D8891682F7D5002FB0C5 /* Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2D.h; sourceTree = "<group>"; };
 		15A3D88B1682F7D5002FB0C5 /* b2BroadPhase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2BroadPhase.cpp; sourceTree = "<group>"; };
@@ -1486,6 +1490,8 @@
 		1829BFE41965094F0046FDE5 /* holdon */ = {
 			isa = PBXGroup;
 			children = (
+				0474DD8B19695C56003B99D8 /* app_font_small.png */,
+				0474DD8C19695C56003B99D8 /* app_font_big.png */,
 				18CB758E1966AA2800407C7F /* effect */,
 				18CB755A196653FE00407C7F /* score */,
 				1806AB6819653C2000773641 /* aboutus */,
@@ -2280,6 +2286,7 @@
 				1829C0001965094F0046FDE5 /* home_sound_open.png in Resources */,
 				18CB759B1966AA2800407C7F /* effect_new_recorder.mp3 in Resources */,
 				18AFD6281963FAF900EB5E63 /* bg.png in Resources */,
+				0474DD8E19695C56003B99D8 /* app_font_big.png in Resources */,
 				1806AB6E19653C2000773641 /* about_bg.png in Resources */,
 				18CB757B1966540800407C7F /* game_rectangle_horizontal.png in Resources */,
 				1806AB6719653C1100773641 /* app_back.png in Resources */,
@@ -2317,6 +2324,7 @@
 				18CB75971966AA2800407C7F /* effect_an_jian.mp3 in Resources */,
 				18CB7568196653FE00407C7F /* score_high.png in Resources */,
 				1829BFFD1965094F0046FDE5 /* home_name_en.png in Resources */,
+				0474DD8D19695C56003B99D8 /* app_font_small.png in Resources */,
 				1806AB6619653C1100773641 /* app_back_sec.png in Resources */,
 				18CB75981966AA2800407C7F /* effect_background.mp3 in Resources */,
 				1AFAF8BC16D35E4900DB1158 /* CloseNormal.png in Resources */,

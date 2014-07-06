@@ -168,6 +168,16 @@ void HoldOnGame::createB2world(){
 void HoldOnGame::createGameElement(){
     CCSize winSize = CCDirector::sharedDirector()->getWinSize();
     
+    HoldOnModel::shareModel()->resetLevelScore();
+
+    char* string;
+    KenGameUtils::getStringByNumber(string, HoldOnModel::shareModel()->getGameLevel());
+    gameLevel = KenGameUtils::createLabelAtlas(string, ccp(268, winSize.height - 80), true);
+    this->addChild(gameLevel);
+    KenGameUtils::getStringByNumber(string, HoldOnModel::shareModel()->getGameScore());
+    gameScore = KenGameUtils::createLabelAtlas(string, ccp(493, winSize.height - 80), true);
+    this->addChild(gameScore);
+    
     playerBall = KenGameUtils::createSprite("game_circle.png", ccp(320, winSize.height - 550));
     this->addChild(playerBall);
     this->addChild(KenGameUtils::createSprite("game_rectangle_ vertical.png", ccp(50, winSize.height - 270)),

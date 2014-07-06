@@ -30,9 +30,27 @@ CCLabelTTF* KenGameUtils::createLabel(const char* string, const char* fontName, 
     return label;
 }
 
+CCLabelAtlas* KenGameUtils::createLabelAtlas(const char* string, const CCPoint& postion, bool small){
+    CCLabelAtlas* atlas = NULL;
+    if (small) {
+        atlas = CCLabelAtlas::create(string, "app_font_small.png", 24, 34, '0');
+    } else {
+        atlas = CCLabelAtlas::create(string, "app_font_big.png", 54, 74, '0');
+    }
+    atlas->setPosition(postion);
+    atlas->setAnchorPoint(ccp(0.5, 0.5));
+    return atlas;
+}
+
 CCMenuItemImage* KenGameUtils::createMenuItemImage(const char *normalImage, const char *selectedImage, CCObject* target, SEL_MenuHandler selector, const CCPoint &position){
     CCMenuItemImage* menuItem = CCMenuItemImage::create(normalImage, selectedImage, target, selector);
     
     menuItem->setPosition(position);
     return menuItem;
+}
+
+void KenGameUtils::getStringByNumber(char* string, int number){
+    char ctime[10];
+    sprintf(ctime, "%d", number);
+    string = ctime;
 }

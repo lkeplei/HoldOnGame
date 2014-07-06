@@ -97,6 +97,7 @@ void HoldOnModel::upgrade(){
 }
 
 uint32_t HoldOnModel::getGameLevel(){
+    CCLOG("gamelevel = %d", gameLevel);
     return gameLevel;
 }
 

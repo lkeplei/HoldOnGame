@@ -50,6 +50,8 @@ private:
     void updateScoreLevel(float delta);
     void updateBody(float delta);
     
+    CCLabelAtlas* gameLevel;
+    CCLabelAtlas* gameScore;
     b2World* gameWorld;
     CCSprite* playerBall;
 };
