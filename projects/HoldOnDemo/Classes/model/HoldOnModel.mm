@@ -7,6 +7,7 @@
 //
 
 #include "HoldOnModel.h"
+#include "HoldOnConfig.h"
 #include "SimpleAudioEngine.h"
 
 #import "GameKitHelper.h"
@@ -39,6 +40,44 @@ HoldOnModel::~HoldOnModel(){
 void HoldOnModel::showGameCenterLoader(){
     //显示排行榜
     [[GameKitHelper sharedGameKitHelper] showLeaderboard];
+}
+
+bool HoldOnModel::isLanguageEnglish(){
+    NSUserDefaults* defs = [NSUserDefaults standardUserDefaults];
+    NSArray* languages = [defs objectForKey:@"AppleLanguages"];
+    NSString* preferredLang = [languages objectAtIndex:0];
+    if ([preferredLang compare:@"zh-Hans"] == NSOrderedSame) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+float HoldOnModel::getBodyVelocity(HoldOnBodyType type){
+    float velocity = KInitialVelocity;
+    
+    switch (type) {
+        case KBodyTypeRectangleVer:{
+            velocity +=  KInitialVelocity * (gameLevel - 1) * 0.15;
+        }
+            break;
+        case KBodyTypeRectangleHor:{
+            velocity +=  KInitialVelocity * (gameLevel - 1) * 0.15;
+        }
+            break;
+        case KBodyTypeTriangle:{
+            velocity +=  KInitialVelocity * (gameLevel - 1) * 0.2;
+        }
+            break;
+        case KBodyTypeSquare:{
+            velocity +=  KInitialVelocity * (gameLevel - 1) * 0.1;
+        }
+            break;
+        default:
+            break;
+    }
+    
+    return velocity;
 }
 
 #pragma mark - music

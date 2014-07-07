@@ -42,7 +42,11 @@ bool HoldOnHome::init(){
         //create bg
         this->addChild(KenGameUtils::createSprite("app_bg.png", ccp(320, winSize.height / 2)), -1);
         
-        this->addChild(KenGameUtils::createSprite("home_name_ch.png", ccp(320, winSize.height - 250)));
+        if (HoldOnModel::shareModel()->isLanguageEnglish()) {
+            this->addChild(KenGameUtils::createSprite("home_name_en.png", ccp(320, winSize.height - 250)));
+        } else {
+            this->addChild(KenGameUtils::createSprite("home_name_ch.png", ccp(320, winSize.height - 250)));
+        }
         
         //create menu
         CCMenuItemImage* item1 = KenGameUtils::createMenuItemImage("home_start_game.png", "home_start_game_sec.png", this,

@@ -23,6 +23,9 @@ public:
 public:
     void showGameCenterLoader();
     
+    bool isLanguageEnglish();
+    float getBodyVelocity(HoldOnBodyType type);
+    
     //music         参考：http://www.2cto.com/kf/201306/217740.html
     void playEffect(HoldOnEffectType type);
     void closeEffect();

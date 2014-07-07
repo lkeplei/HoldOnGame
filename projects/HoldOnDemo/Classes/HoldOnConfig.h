@@ -10,6 +10,7 @@
 #ifndef __HOLDON_CONFIG_H__
 #define __HOLDON_CONFIG_H__
 
-#define  PTM_RATIO  (32.0)
+#define PTM_RATIO  (32.0)
+#define KInitialVelocity        (4)
 
 #endif // __HOLDON_CONFIG_H__

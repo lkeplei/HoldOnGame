@@ -53,6 +53,7 @@ private:
     void createB2world();
     void createGameElement();
     
+    void checkCollision();
     void updateScoreLevel(float delta);
     void updateBody(float delta);
     

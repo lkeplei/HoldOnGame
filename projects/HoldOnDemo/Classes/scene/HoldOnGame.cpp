@@ -13,11 +13,6 @@
 #include "KenGameUtils.h"
 #include "HoldOnConfig.h"
 
-#define KGameElement1        1001
-#define KGameElement2        1002
-#define KGameElement3        1003
-#define KGameElement4        1004
-
 #define KGameTimerTag        2001
 
 CCScene* HoldOnGame::scene(){
@@ -186,11 +181,11 @@ void HoldOnGame::createGameElement(){
     playerBall = KenGameUtils::createSprite("game_circle.png", ccp(320, winSize.height - 550));
     
     this->addChild(KenGameUtils::createSprite("game_rectangle_ vertical.png", ccp(50, winSize.height - 270)),
-                   playerBall->getZOrder(), KGameElement1);
+                   playerBall->getZOrder(), KBodyTypeRectangleVer);
     this->addChild(KenGameUtils::createSprite("game_rectangle_horizontal.png", ccp(510, winSize.height - 190)),
-                   playerBall->getZOrder(), KGameElement2);
-    this->addChild(KenGameUtils::createSprite("game_triangle.png", ccp(110, winSize.height - 861)), playerBall->getZOrder(), KGameElement3);
-    this->addChild(KenGameUtils::createSprite("game_square.png", ccp(535, winSize.height - 855)), playerBall->getZOrder(), KGameElement4);
+                   playerBall->getZOrder(), KBodyTypeRectangleHor);
+    this->addChild(KenGameUtils::createSprite("game_triangle.png", ccp(110, winSize.height - 861)), playerBall->getZOrder(), KBodyTypeTriangle);
+    this->addChild(KenGameUtils::createSprite("game_square.png", ccp(535, winSize.height - 855)), playerBall->getZOrder(), KBodyTypeSquare);
     
     this->addChild(playerBall);
 }
@@ -199,7 +194,7 @@ void HoldOnGame::startGame(){
     currentGameStatus = KGameStatusGaming;
     HoldOnModel::shareModel()->resetLevelScore();
     
-    for (int i = KGameElement1; i <= KGameElement4; i++) {
+    for (int i = KBodyTypeRectangleVer; i <= KBodyTypeSquare; i++) {
         CCSprite* sprite = (CCSprite*)this->getChildByTag(i);
         if (sprite) {
             //add box2d body
@@ -208,9 +203,9 @@ void HoldOnGame::startGame(){
             //CCLOG("%f",birdShape.m_radius);
             b2FixtureDef birdFixtureDef;
             birdFixtureDef.shape = &birdShape;
-            birdFixtureDef.density = 0.001;
-            birdFixtureDef.friction = 0;
-            birdFixtureDef.restitution = 1;
+            birdFixtureDef.density = 0.001;             //密度
+            birdFixtureDef.friction = 0;                //摩擦力
+            birdFixtureDef.restitution = 1;             //弹力
 
             birdFixtureDef.filter.categoryBits = 0x0002;
             birdFixtureDef.filter.maskBits = 0x0001;
@@ -221,8 +216,9 @@ void HoldOnGame::startGame(){
             b2Body* birdBody = gameWorld->CreateBody(&birdBodyDef);
             birdBody->SetUserData(sprite);
             birdBody->CreateFixture(&birdFixtureDef);
-            //    birdBody->ApplyForce(b2Vec2(-5.5f * distance * cos, -5.5f * distance * sin), birdBody->GetWorldCenter());
-            birdBody->SetLinearVelocity(b2Vec2(10, 10));
+//            birdBody->ApplyForce(b2Vec2(-5.5f * distance * cos, -5.5f * distance * sin), birdBody->GetWorldCenter());
+            float velocity = HoldOnModel::shareModel()->getBodyVelocity((HoldOnBodyType)i);
+            birdBody->SetLinearVelocity(b2Vec2(velocity, velocity));
             birdBody->SetLinearDamping(0);
         }
     }
@@ -243,15 +239,19 @@ void HoldOnGame::gameOver(){
             break;
         case 1:{
             CCLog("gameOver() step = %d", step);
-            for (int i = KGameElement1; i <= KGameElement4; i++) {
+            CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+            this->addChild(KenGameUtils::createSprite("game_over.png", ccp(320, winSize.height - 458)));
+            
+            playerBall->runAction(CCFadeOut::create(2));
+            for (int i = KBodyTypeRectangleVer; i <= KBodyTypeSquare; i++) {
                 CCSprite* sprite = (CCSprite*)this->getChildByTag(i);
                 if (sprite) {
-                    if (i == KGameElement4) {
+                    if (i == KBodyTypeSquare) {
                         CCCallFuncN* callbakc = CCCallFuncN::create(this, callfuncN_selector(HoldOnGame::gameOver));
-                        CCSequence* actionSeq = CCSequence::create(CCFadeOut::create(3), callbakc, NULL);
+                        CCSequence* actionSeq = CCSequence::create(CCFadeOut::create(2), callbakc, NULL);
                         sprite->runAction(actionSeq);
                     } else {
-                        sprite->runAction(CCFadeOut::create(3));
+                        sprite->runAction(CCFadeOut::create(2));
                     }
                 }
             }
@@ -277,6 +277,7 @@ void HoldOnGame::update(float delta){
     if (currentGameStatus == KGameStatusGaming) {
         this->updateScoreLevel(delta);
         this->updateBody(delta);
+        this->checkCollision();
     }
 }
 
@@ -298,13 +299,98 @@ void HoldOnGame::updateBody(float delta){
     // Instruct the world to perform a single step of simulation.
     gameWorld->Step(delta, velocityIterations, positionIterations);
     for (b2Body* b = gameWorld->GetBodyList(); b; b = b->GetNext()){
-        CCSprite *myActor = (CCSprite*)b->GetUserData();
-        if (myActor){
-            //Synchronize the AtlasSprites position and rotation with the corresponding body
-            myActor->setPosition(CCPointMake( b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO));
-            myActor->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
+        if (b) {
+            CCSprite *myActor = (CCSprite*)b->GetUserData();
+            if (myActor){
+                //Synchronize the AtlasSprites position and rotation with the corresponding body
+                myActor->setPosition(CCPointMake( b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO));
+                myActor->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
+                
+                //set velocity
+                float velocity = HoldOnModel::shareModel()->getBodyVelocity((HoldOnBodyType)myActor->getTag());
+                b->SetLinearVelocity(b2Vec2(b->GetLinearVelocity().x > 0 ? velocity : -velocity, b->GetLinearVelocity().y > 0 ? velocity : -velocity));
+            }
         }
     }
+}
+
+void HoldOnGame::checkCollision(){
+    //小球与障碍物
+    CCRect ballRect = playerBall->boundingBox();
+    for (int i = KBodyTypeRectangleVer; i <= KBodyTypeSquare; i++) {
+        CCSprite* sprite = (CCSprite*)this->getChildByTag(i);
+        if (ballRect.intersectsRect(sprite->boundingBox())) {
+            this->gameOver();
+            break;
+        }
+    }
+    
+    
+//    // 子弹跟敌机
+//    CCRect bulletRec = bullet->boundingBox();
+//    
+//    CCObject* foeObj;
+//    CCARRAY_FOREACH(this->getFoePlanes(), foeObj){
+//        CCFoePlane *foePlane = (CCFoePlane *)foeObj;
+//        if (bulletRec.intersectsRect(foePlane->boundingBox())  ) {
+//            this->resetBullet();
+//            this->fowPlaneHitAnimation(foePlane);
+//            foePlane->hp = foePlane->hp - (isBigBullet?2:1);
+//            if (foePlane->hp<=0) {
+//                //CCLog("##### move out animation:   %d   for hp(%d)",foePlane->__id,foePlane->hp);
+//                this->fowPlaneBlowupAnimation(foePlane);
+//                //CCLog("##### move out begin:   %d   for hp(%d)",foePlane->__id,foePlane->hp);
+//                this->getFoePlanes()->removeObject(foePlane);
+//                //CCLog("##### move out end:   %d   for hp(%d)",foePlane->__id,foePlane->hp);
+//            }
+//        }
+//    }
+//    
+//    // 飞机跟打飞机
+//    CCRect playerRec = player->boundingBox();
+//    playerRec.origin.x += 25;
+//    playerRec.size.width -= 50;
+//    playerRec.origin.y -= 10;
+//    playerRec.size.height -= 10;
+//    
+//    CCObject *foeObj3;
+//    CCARRAY_FOREACH(this->getFoePlanes(), foeObj3){
+//        CCFoePlane *foePlane = (CCFoePlane *)foeObj3;
+//        if (playerRec.intersectsRect(foePlane->boundingBox()) ) {
+//            CCLog("@@@@@ shit,i was killed  by:   %d",foePlane->__id);
+//            
+//            this->playerBlowupAnimation();
+//            this->fowPlaneBlowupAnimation(foePlane);// 同归于尽
+//            this->getFoePlanes()->removeObject(foePlane);
+//            this->gameOver();
+//        }
+//    }
+//    
+//    // 飞机跟道具
+//    if (isVisible) {
+//        CCRect playerRec1 = player->boundingBox();
+//        CCRect propRec = this->getProp()->getProp()->boundingBox();
+//        if (playerRec1.intersectsRect(propRec)) {
+//            
+//            this->getProp()->getProp()->stopAllActions();
+//            this->getProp()->getProp()->removeFromParent();
+//            isVisible = false;
+//            
+//            if (this->getProp()->type == propsTypeBullet) {
+//                CCLog("========= 大力丸子");
+//                isBigBullet = true;
+//                isChangeBullet = true;
+//            }else if (this->getProp()->type == propsTypeBomb) {
+//                CCLog("========= 意念一直线，敌人死光光");
+//                CCObject *foeObj4;
+//                CCARRAY_FOREACH(this->getFoePlanes(), foeObj4){
+//                    CCFoePlane *foePlane = (CCFoePlane *)foeObj4;
+//                    this->fowPlaneBlowupAnimation(foePlane);
+//                }
+//                this->getFoePlanes()->removeAllObjects();
+//            }
+//        }
+//    }
 }
 
 #pragma mark - touch
@@ -314,14 +400,16 @@ bool HoldOnGame::ccTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent
 }
 
 void HoldOnGame::ccTouchMoved(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent){
-    CCPoint touchLocation = this->convertTouchToNodeSpace(pTouch);
-//    CCPoint oldTouchLocation = pTouch->getPreviousLocationInView();
-//    
-//    oldTouchLocation = CCDirector::sharedDirector()->convertToGL(oldTouchLocation);
-//    oldTouchLocation = this->convertToNodeSpace(oldTouchLocation);
-//    
-//    CCPoint translation = ccpSub(touchLocation, oldTouchLocation);
-    playerBall->setPosition(touchLocation);
+    if (currentGameStatus == KGameStatusGaming) {
+        CCPoint touchLocation = this->convertTouchToNodeSpace(pTouch);
+//        CCPoint oldTouchLocation = pTouch->getPreviousLocationInView();
+//
+//        oldTouchLocation = CCDirector::sharedDirector()->convertToGL(oldTouchLocation);
+//        oldTouchLocation = this->convertToNodeSpace(oldTouchLocation);
+//
+//        CCPoint translation = ccpSub(touchLocation, oldTouchLocation);
+        playerBall->setPosition(touchLocation);
+    }
 }
 
 void HoldOnGame::ccTouchEnded(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent){

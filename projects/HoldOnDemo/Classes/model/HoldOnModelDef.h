@@ -20,4 +20,11 @@ typedef enum {
     KEffectTypeUpgrade,
 } HoldOnEffectType;
 
+typedef enum {
+    KBodyTypeRectangleVer = 1001,       //竖长方形
+    KBodyTypeRectangleHor,              //横长方形
+    KBodyTypeTriangle,                  //三角形
+    KBodyTypeSquare,                    //正方形
+} HoldOnBodyType;
+
 #endif // _HOLDONMODEL_DEF_H_

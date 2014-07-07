@@ -8,6 +8,7 @@
 
 #include "HoldOnGameScore.h"
 #include "HoldOnGame.h"
+#include "HoldOnHome.h"
 #include "KenGameUtils.h"
 #include "HoldOnModel.h"
 
@@ -109,5 +110,5 @@ void HoldOnGameScore::menuGameCenter(CCObject* pSender){
 }
 
 void HoldOnGameScore::menuJumpToHome(CCObject* pSender){
-    CCDirector::sharedDirector()->popScene();
+    CCDirector::sharedDirector()->replaceScene(HoldOnHome::scene());
 }
