@@ -23,7 +23,11 @@ HoldOnModel* HoldOnModel::shareModel(){
 
 HoldOnModel::HoldOnModel()
 : gameScore(0)
+, gameTime(0)
 , gameLevel(1)
+
+, levelTime(0)
+, scoreTime(0)
 {
     
 };
@@ -89,22 +93,24 @@ void HoldOnModel::openEffect(){
 void HoldOnModel::resetLevelScore(){
     gameLevel = 1;
     gameScore = 0;
+    gameTime = 0;
+    
+    levelTime = 0;
+    scoreTime = 0;
 }
 
-void HoldOnModel::upgrade(){
-    this->countScore();
-    gameLevel++;
-}
-
-uint32_t HoldOnModel::getGameLevel(){
-    CCLOG("gamelevel = %d", gameLevel);
-    return gameLevel;
-}
-
-void HoldOnModel::countScore(){
-    gameScore += gameLevel * 100;
-}
-
-double HoldOnModel::getGameScore(){
-    return gameScore;
+void HoldOnModel::updateGameTime(float delta){
+    levelTime += delta;
+    scoreTime += delta;
+    gameTime += delta;
+    
+    if (levelTime >= 10) {
+        gameScore += gameLevel * 100;
+        gameLevel++;
+        levelTime -= 10;
+        scoreTime -= 1;
+    } else if (scoreTime >= 1){
+        gameScore += gameLevel * 100;
+        scoreTime -= 1;
+    }
 }

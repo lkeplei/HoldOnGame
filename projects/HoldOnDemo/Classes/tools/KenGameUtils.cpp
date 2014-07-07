@@ -10,7 +10,6 @@
 
 CCSprite* KenGameUtils::createSprite(const char* name, const CCPoint &position, float scaleX, float scaleY){
     CCSprite* sprite = CCSprite::create(name);
-//    sprite->setAnchorPoint(ccp(0,0));
     sprite->setPosition(position);
     
     if (scaleX != 1) {
@@ -47,10 +46,4 @@ CCMenuItemImage* KenGameUtils::createMenuItemImage(const char *normalImage, cons
     
     menuItem->setPosition(position);
     return menuItem;
-}
-
-void KenGameUtils::getStringByNumber(char* string, int number){
-    char ctime[10];
-    sprintf(ctime, "%d", number);
-    string = ctime;
 }

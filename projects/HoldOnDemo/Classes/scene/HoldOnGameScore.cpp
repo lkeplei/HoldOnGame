@@ -56,10 +56,45 @@ bool HoldOnGameScore::init(){
         pMenu->setPosition(CCPointZero);
         this->addChild(pMenu, 1);
         
+        char levelString[4];
+        sprintf(levelString, "%d", HoldOnModel::shareModel()->getGameLevel());
+        this->addChild(KenGameUtils::createLabelAtlas(levelString, ccp(236, winSize.height - 294), true));
+        char timeString[8];
+        sprintf(timeString, "%.2f", HoldOnModel::shareModel()->getGameTime());
+        this->addChild(KenGameUtils::createLabelAtlas(timeString, ccp(434, winSize.height - 294), true));
+        
+        gameScore = KenGameUtils::createLabelAtlas("0", ccp(320, winSize.height - 404));
+        this->addChild(gameScore);
+        
+        this->scheduleUpdate();     //开启计时刷新
+        
         bRet = true;
     } while (0);
     
     return bRet;
+}
+
+#pragma mark - parent method
+void HoldOnGameScore::update(float delta){
+    static uint32_t score = 0;
+    if (score < HoldOnModel::shareModel()->getGameScore()) {
+        score += 100;
+        
+        char scoreString[12];
+        sprintf(scoreString, "%d", score);
+        gameScore->setString(scoreString);
+        
+        if (score >= HoldOnModel::shareModel()->getGameScore()) {
+            CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+            CCSprite* scoreSprite = KenGameUtils::createSprite("score_high.png", ccp(478, winSize.height - 371));
+            this->addChild(scoreSprite);
+            
+//            CCScaleTo* scaleTo = CCScaleTo::create(0, 1.3);
+//            scoreSprite->runAction(scaleTo);
+//            CCScaleTo* actionScaleTo = CCScaleTo::create(1, 0.8);
+//            scoreSprite->runAction(actionScaleTo);
+        }
+    }
 }
 
 #pragma mark - menu call back

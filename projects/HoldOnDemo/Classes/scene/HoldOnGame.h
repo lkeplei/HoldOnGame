@@ -18,6 +18,12 @@ using namespace cocos2d;
 class HoldOnGame : public CCLayer
 {
 public:
+    typedef enum {
+        KGameStatusNull = 0,
+        KGameStatusGaming,
+        KGameStatusOver,
+    } GameStatus;
+    
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
     virtual bool init();
     
@@ -28,6 +34,7 @@ public:
     
 public:
     void timerAnimation();
+    void gameOver();
     
     // a selector callback
     void menuBack(CCObject* pSender);
@@ -43,7 +50,6 @@ public:
     virtual void draw();
 private:
     void startGame();
-    void gameOver();
     void createB2world();
     void createGameElement();
     
@@ -54,6 +60,8 @@ private:
     CCLabelAtlas* gameScore;
     b2World* gameWorld;
     CCSprite* playerBall;
+
+    GameStatus currentGameStatus;
 };
 
 #endif // __HOLDONGAME_SCENE_H__

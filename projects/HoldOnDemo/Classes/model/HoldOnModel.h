@@ -29,14 +29,18 @@ public:
     void openEffect();
     
     void resetLevelScore();
-    void upgrade();
-    uint32_t getGameLevel();
-    void countScore();
-    double getGameScore();
+    void updateGameTime(float delta);
+    uint16_t getGameLevel(){return gameLevel;}
+    uint32_t getGameScore(){return gameScore;}
+    double getGameTime(){return gameTime;}
     
 private:
-    uint32_t gameLevel;
-    double gameScore;
+    uint16_t gameLevel;
+    double gameTime;
+    uint32_t gameScore;
+    
+    float levelTime;
+    float scoreTime;
 };
 
 #endif // _HOLDONMODEL_H_

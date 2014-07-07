@@ -8,6 +8,7 @@
 
 #include "HoldOnGame.h"
 #include "HoldOnHome.h"
+#include "HoldOnGameScore.h"
 #include "HoldOnModel.h"
 #include "KenGameUtils.h"
 #include "HoldOnConfig.h"
@@ -55,6 +56,8 @@ bool HoldOnGame::init(){
         pMenu->setPosition(CCPointZero);
         this->addChild(pMenu, 1);
         
+        currentGameStatus = KGameStatusNull;
+        
         this->createGameElement();
         this->createB2world();
         this->timerAnimation();
@@ -77,18 +80,19 @@ void HoldOnGame::timerAnimation(){
     }
     
     if (step == 5) {
+        step = 1;
         this->startGame();
     } else {
         CCSize winSize = CCDirector::sharedDirector()->getWinSize();
         switch (step) {
             case 1:
-                timer = KenGameUtils::createSprite("game_time_1.png", ccp(320, winSize.height - 386));
+                timer = KenGameUtils::createSprite("game_time_3.png", ccp(320, winSize.height - 386));
                 break;
             case 2:
                 timer = KenGameUtils::createSprite("game_time_2.png", ccp(320, winSize.height - 386));
                 break;
             case 3:
-                timer = KenGameUtils::createSprite("game_time_3.png", ccp(320, winSize.height - 386));
+                timer = KenGameUtils::createSprite("game_time_1.png", ccp(320, winSize.height - 386));
                 break;
             case 4:
                 timer = KenGameUtils::createSprite("game_go.png", ccp(320, winSize.height - 386));
@@ -170,25 +174,29 @@ void HoldOnGame::createGameElement(){
     
     HoldOnModel::shareModel()->resetLevelScore();
 
-    char* string;
-    KenGameUtils::getStringByNumber(string, HoldOnModel::shareModel()->getGameLevel());
-    gameLevel = KenGameUtils::createLabelAtlas(string, ccp(268, winSize.height - 80), true);
+    char levelString[4];
+    sprintf(levelString, "%d", HoldOnModel::shareModel()->getGameLevel());
+    gameLevel = KenGameUtils::createLabelAtlas(levelString, ccp(268, winSize.height - 80), true);
     this->addChild(gameLevel);
-    KenGameUtils::getStringByNumber(string, HoldOnModel::shareModel()->getGameScore());
-    gameScore = KenGameUtils::createLabelAtlas(string, ccp(493, winSize.height - 80), true);
+    char timeString[8];
+    sprintf(timeString, "%.2f", HoldOnModel::shareModel()->getGameTime());
+    gameScore = KenGameUtils::createLabelAtlas(timeString, ccp(493, winSize.height - 80), true);
     this->addChild(gameScore);
     
     playerBall = KenGameUtils::createSprite("game_circle.png", ccp(320, winSize.height - 550));
-    this->addChild(playerBall);
+    
     this->addChild(KenGameUtils::createSprite("game_rectangle_ vertical.png", ccp(50, winSize.height - 270)),
                    playerBall->getZOrder(), KGameElement1);
     this->addChild(KenGameUtils::createSprite("game_rectangle_horizontal.png", ccp(510, winSize.height - 190)),
                    playerBall->getZOrder(), KGameElement2);
     this->addChild(KenGameUtils::createSprite("game_triangle.png", ccp(110, winSize.height - 861)), playerBall->getZOrder(), KGameElement3);
     this->addChild(KenGameUtils::createSprite("game_square.png", ccp(535, winSize.height - 855)), playerBall->getZOrder(), KGameElement4);
+    
+    this->addChild(playerBall);
 }
 
 void HoldOnGame::startGame(){
+    currentGameStatus = KGameStatusGaming;
     HoldOnModel::shareModel()->resetLevelScore();
     
     for (int i = KGameElement1; i <= KGameElement4; i++) {
@@ -220,15 +228,68 @@ void HoldOnGame::startGame(){
     }
 }
 
+void HoldOnGame::gameOver(){
+    currentGameStatus = KGameStatusOver;
+    static int step = 0;
+    switch (step) {
+        case 0:{
+            CCLog("gameOver() step = %d", step);
+            CCCallFuncN* callbakc = CCCallFuncN::create(this, callfuncN_selector(HoldOnGame::gameOver));
+            CCSequence* actionSeq = CCSequence::create(CCBlink::create(2, 4), callbakc, NULL);
+            playerBall->runAction(actionSeq);
+            
+            step++;
+        }
+            break;
+        case 1:{
+            CCLog("gameOver() step = %d", step);
+            for (int i = KGameElement1; i <= KGameElement4; i++) {
+                CCSprite* sprite = (CCSprite*)this->getChildByTag(i);
+                if (sprite) {
+                    if (i == KGameElement4) {
+                        CCCallFuncN* callbakc = CCCallFuncN::create(this, callfuncN_selector(HoldOnGame::gameOver));
+                        CCSequence* actionSeq = CCSequence::create(CCFadeOut::create(3), callbakc, NULL);
+                        sprite->runAction(actionSeq);
+                    } else {
+                        sprite->runAction(CCFadeOut::create(3));
+                    }
+                }
+            }
+            
+            step++;
+        }
+            break;
+        case 2:{
+            CCLog("gameOver() step = %d", step);
+            CCDirector::sharedDirector()->replaceScene(HoldOnGameScore::scene());
+            
+            step = 0;
+        }
+            break;
+        default:
+            step = 0;
+            break;
+    }
+}
+
 #pragma mark - parent method
 void HoldOnGame::update(float delta){
-    CCLOG("update delta = %f", delta);
-    this->updateScoreLevel(delta);
-    this->updateBody(delta);
+    if (currentGameStatus == KGameStatusGaming) {
+        this->updateScoreLevel(delta);
+        this->updateBody(delta);
+    }
 }
 
 void HoldOnGame::updateScoreLevel(float delta){
+    HoldOnModel::shareModel()->updateGameTime(delta);
     
+    char levelString[4];
+    sprintf(levelString, "%d", HoldOnModel::shareModel()->getGameLevel());
+    gameLevel->setString(levelString);
+
+    char scoreString[8];
+    sprintf(scoreString, "%.2f", HoldOnModel::shareModel()->getGameTime());
+    gameScore->setString(scoreString);
 }
 
 void HoldOnGame::updateBody(float delta){

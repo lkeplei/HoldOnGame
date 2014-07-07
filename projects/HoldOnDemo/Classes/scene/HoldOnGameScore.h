@@ -21,6 +21,7 @@ public:
     
     // there's no 'id' in cpp, so we recommand to return the exactly class pointer
     static CCScene* scene();
+    virtual void update(float delta);
     
     CREATE_FUNC(HoldOnGameScore);
     
@@ -29,6 +30,9 @@ public:
     void menuStartGame(CCObject* pSender);
     void menuGameCenter(CCObject* pSender);
     void menuJumpToHome(CCObject* pSender);
+    
+private:
+    CCLabelAtlas* gameScore;
 };
 
 #endif  // _HOLDONGAMESCORE_SCENE_H_
