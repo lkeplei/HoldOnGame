@@ -21,6 +21,7 @@ public:
     static HoldOnModel* shareModel(void);
     
 public:
+    void reportScore();
     void showGameCenterLoader();
     
     bool isLanguageEnglish();

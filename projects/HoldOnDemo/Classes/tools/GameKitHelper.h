@@ -19,6 +19,7 @@
 + (GameKitHelper *)sharedGameKitHelper;
 - (void) authenticateLocalUser;
 - (void) showLeaderboard;
-- (void)leaderboardViewControllerDidFinish:(GKLeaderboardViewController *)viewController;
+- (void) reportScore:(uint32_t)score;    //上传得分
+- (void) leaderboardViewControllerDidFinish:(GKLeaderboardViewController *)viewController;
 
 @end

@@ -7,6 +7,8 @@
 //
 
 #import "GameKitHelper.h"
+#include "HoldOnConfig.h"
+
 @implementation GameKitHelper
 
 @synthesize gameCenterAvailable;
@@ -67,6 +69,19 @@ static UIViewController* currentModalViewController = nil;
     } else {
         NSLog(@"Already authenticated!");
     }
+}
+
+- (void)reportScore:(uint32_t)score{
+    GKScore *scoreReporter = [[GKScore alloc] initWithCategory:KLeaderBoardId];
+    scoreReporter.value = score;
+    
+    [scoreReporter reportScoreWithCompletionHandler:^(NSError *error) {
+        if (error != nil){
+            NSLog(@"上传分数出错.");
+        }else {
+            NSLog(@"上传分数成功");
+        }
+    }];
 }
 
 //显示排行榜

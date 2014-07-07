@@ -234,6 +234,8 @@ void HoldOnGame::gameOver(){
             CCSequence* actionSeq = CCSequence::create(CCBlink::create(2, 4), callbakc, NULL);
             playerBall->runAction(actionSeq);
             
+            HoldOnModel::shareModel()->reportScore();
+            
             step++;
         }
             break;

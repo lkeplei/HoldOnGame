@@ -67,6 +67,8 @@ bool HoldOnGameScore::init(){
         gameScore = KenGameUtils::createLabelAtlas("0", ccp(320, winSize.height - 404));
         this->addChild(gameScore);
         
+        currentScore = 0;
+        
         this->scheduleUpdate();     //开启计时刷新
         
         bRet = true;
@@ -77,15 +79,14 @@ bool HoldOnGameScore::init(){
 
 #pragma mark - parent method
 void HoldOnGameScore::update(float delta){
-    static uint32_t score = 0;
-    if (score < HoldOnModel::shareModel()->getGameScore()) {
-        score += 100;
+    if (currentScore < HoldOnModel::shareModel()->getGameScore()) {
+        currentScore += 100;
         
         char scoreString[12];
-        sprintf(scoreString, "%d", score);
+        sprintf(scoreString, "%d", currentScore);
         gameScore->setString(scoreString);
         
-        if (score >= HoldOnModel::shareModel()->getGameScore()) {
+        if (currentScore >= HoldOnModel::shareModel()->getGameScore()) {
             CCSize winSize = CCDirector::sharedDirector()->getWinSize();
             CCSprite* scoreSprite = KenGameUtils::createSprite("score_high.png", ccp(478, winSize.height - 371));
             this->addChild(scoreSprite);
@@ -110,5 +111,6 @@ void HoldOnGameScore::menuGameCenter(CCObject* pSender){
 }
 
 void HoldOnGameScore::menuJumpToHome(CCObject* pSender){
+    currentScore = 0;
     CCDirector::sharedDirector()->replaceScene(HoldOnHome::scene());
 }

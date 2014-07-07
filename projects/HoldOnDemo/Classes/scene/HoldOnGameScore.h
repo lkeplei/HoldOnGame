@@ -33,6 +33,7 @@ public:
     
 private:
     CCLabelAtlas* gameScore;
+    uint32_t currentScore;
 };
 
 #endif  // _HOLDONGAMESCORE_SCENE_H_

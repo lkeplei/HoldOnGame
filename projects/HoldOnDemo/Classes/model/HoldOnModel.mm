@@ -42,6 +42,12 @@ void HoldOnModel::showGameCenterLoader(){
     [[GameKitHelper sharedGameKitHelper] showLeaderboard];
 }
 
+void HoldOnModel::reportScore(){
+    //显示排行榜
+    [[GameKitHelper sharedGameKitHelper] reportScore:gameScore];
+}
+
+
 bool HoldOnModel::isLanguageEnglish(){
     NSUserDefaults* defs = [NSUserDefaults standardUserDefaults];
     NSArray* languages = [defs objectForKey:@"AppleLanguages"];
