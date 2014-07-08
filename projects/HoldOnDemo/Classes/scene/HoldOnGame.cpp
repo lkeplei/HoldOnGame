@@ -34,33 +34,25 @@ CCScene* HoldOnGame::scene(){
     return scene;
 }
 
-bool HoldOnGame::init(){
-    bool bRet = false;
-    do{
-        CC_BREAK_IF(! CCLayer::init());
-        CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-        //create bg
-        this->addChild(KenGameUtils::createSprite("app_bg.png", ccp(320, winSize.height / 2)), -1);
-        this->addChild(KenGameUtils::createSprite("game_message.png", ccp(320, winSize.height - 81)));
-        
-        //create menu
-        CCMenuItemImage* item1 = KenGameUtils::createMenuItemImage("app_back.png", "app_back_sec.png", this,
-                                                                   menu_selector(HoldOnGame::menuBack),
-                                                                   ccp(50, winSize.height - 81));
-        CCMenu* pMenu = CCMenu::create(item1, NULL);
-        pMenu->setPosition(CCPointZero);
-        this->addChild(pMenu, 1);
-        
-        currentGameStatus = KGameStatusNull;
-        
-        this->createGameElement();
-        this->createB2world();
-        this->timerAnimation();
-        
-        bRet = true;
-    } while (0);
+void HoldOnGame::initScene(){
+    CCSize winSize = gameLayer->getContentSize();
+    //create bg
+    gameLayer->addChild(KenGameUtils::createSprite("app_bg.png", ccp(320, winSize.height / 2)), -1);
+    gameLayer->addChild(KenGameUtils::createSprite("game_message.png", ccp(320, winSize.height - 81)));
     
-    return bRet;
+    //create menu
+    CCMenuItemImage* item1 = KenGameUtils::createMenuItemImage("app_back.png", "app_back_sec.png", this,
+                                                               menu_selector(HoldOnGame::menuBack),
+                                                               ccp(50, winSize.height - 81));
+    CCMenu* pMenu = CCMenu::create(item1, NULL);
+    pMenu->setPosition(CCPointZero);
+    gameLayer->addChild(pMenu, 1);
+    
+    currentGameStatus = KGameStatusNull;
+    
+    this->createGameElement();
+    this->createB2world();
+    this->timerAnimation();
 }
 
 #pragma mark - private method
@@ -68,7 +60,7 @@ void HoldOnGame::timerAnimation(){
     static int step = 1;
     CCLog("timerAnimation step = %d", step);
     
-    CCSprite* timer = (CCSprite*)this->getChildByTag(KGameTimerTag);
+    CCSprite* timer = (CCSprite*)gameLayer->getChildByTag(KGameTimerTag);
     if (timer) {
         timer->removeFromParentAndCleanup(true);
         timer = NULL;
@@ -78,7 +70,7 @@ void HoldOnGame::timerAnimation(){
         step = 1;
         this->startGame();
     } else {
-        CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+        CCSize winSize = gameLayer->getContentSize();
         switch (step) {
             case 1:{
                 HoldOnModel::shareModel()->playEffect(KEffectTypeTime);      //计时音效
@@ -98,7 +90,7 @@ void HoldOnGame::timerAnimation(){
             default:
                 break;
         }
-        this->addChild(timer, timer->getZOrder(), KGameTimerTag);
+        gameLayer->addChild(timer, timer->getZOrder(), KGameTimerTag);
         
         CCCallFuncN* callbakc = CCCallFuncN::create(this, callfuncN_selector(HoldOnGame::timerAnimation));
         CCScaleTo* actionScaleTo = CCScaleTo::create(1, 1.3);
@@ -114,6 +106,7 @@ void HoldOnGame::createB2world(){
     this->setTouchEnabled(true);
     
     CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    CCSize contentSize = gameLayer->getContentSize();
     
     //define the world
     b2Vec2 gravity;
@@ -124,7 +117,7 @@ void HoldOnGame::createB2world(){
     gameWorld->SetContinuousPhysics(true);
     // Define the ground body.
     b2BodyDef groundBodyDef;
-    groundBodyDef.position.Set(0, 0); // bottom-left corner
+    groundBodyDef.position.Set(0, (winSize.height - contentSize.height) / 2 / PTM_RATIO); // bottom-left corner
     
     // Call the body factory which allocates memory for the ground body
     // from a pool and creates the ground box shape (also from a pool).
@@ -139,26 +132,23 @@ void HoldOnGame::createB2world(){
     birdFixtureDef.filter.maskBits = 0x0003;
     
     // bottom
-    groundBox.Set(b2Vec2(0, 0), b2Vec2(winSize.width / PTM_RATIO, 0));
+    groundBox.Set(b2Vec2(0, 0), b2Vec2(contentSize.width / PTM_RATIO, 0));
     birdFixtureDef.shape = &groundBox;
     groundBody->CreateFixture(&birdFixtureDef);
     // top
-    groundBox.Set(b2Vec2(0, (winSize.height - 140) / PTM_RATIO), b2Vec2(winSize.width / PTM_RATIO, (winSize.height - 140) / PTM_RATIO));
+    groundBox.Set(b2Vec2(0, (contentSize.height - 140) / PTM_RATIO), b2Vec2(contentSize.width / PTM_RATIO, (contentSize.height - 140) / PTM_RATIO));
     birdFixtureDef.shape = &groundBox;
     groundBody->CreateFixture(&birdFixtureDef);
     // left
-    groundBox.Set(b2Vec2(0, winSize.height / PTM_RATIO), b2Vec2(0, 0));
+    groundBox.Set(b2Vec2(0, contentSize.height / PTM_RATIO), b2Vec2(0, 0));
     birdFixtureDef.shape = &groundBox;
     groundBody->CreateFixture(&birdFixtureDef);
     // right
-    groundBox.Set(b2Vec2(winSize.width / PTM_RATIO, winSize.height / PTM_RATIO), b2Vec2(winSize.width / PTM_RATIO,0));
+    groundBox.Set(b2Vec2(contentSize.width / PTM_RATIO, contentSize.height / PTM_RATIO), b2Vec2(contentSize.width / PTM_RATIO,0));
     birdFixtureDef.shape = &groundBox;
     groundBody->CreateFixture(&birdFixtureDef);
     
-//    contactListener = new MyContactListener();
-    gameWorld->SetContactListener(this);
-    //Preload effect
-//    SimpleAudioEngine.sharedEngine().preloadEffect(@"resource/hahaha");
+    gameWorld->SetContactListener(this);    //设置刚体碰撞代理
     
     //debug
     GLESDebugDraw* m_debugDraw = new GLESDebugDraw( PTM_RATIO );
@@ -173,29 +163,29 @@ void HoldOnGame::createB2world(){
 }
 
 void HoldOnGame::createGameElement(){
-    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    CCSize winSize = gameLayer->getContentSize();
     
     HoldOnModel::shareModel()->resetLevelScore();
 
     char levelString[4];
     sprintf(levelString, "%d", HoldOnModel::shareModel()->getGameLevel());
     gameLevel = KenGameUtils::createLabelAtlas(levelString, ccp(268, winSize.height - 80), true);
-    this->addChild(gameLevel);
+    gameLayer->addChild(gameLevel);
     char timeString[8];
     sprintf(timeString, "%.2f", HoldOnModel::shareModel()->getGameTime());
     gameScore = KenGameUtils::createLabelAtlas(timeString, ccp(493, winSize.height - 80), true);
-    this->addChild(gameScore);
+    gameLayer->addChild(gameScore);
     
     playerBall = KenGameUtils::createSprite("game_circle.png", ccp(320, winSize.height - 550));
     
-    this->addChild(KenGameUtils::createSprite("game_rectangle_ vertical.png", ccp(50, winSize.height - 270)),
+    gameLayer->addChild(KenGameUtils::createSprite("game_rectangle_ vertical.png", ccp(50, winSize.height - 270)),
                    playerBall->getZOrder(), KBodyTypeRectangleVer);
-    this->addChild(KenGameUtils::createSprite("game_rectangle_horizontal.png", ccp(510, winSize.height - 190)),
+    gameLayer->addChild(KenGameUtils::createSprite("game_rectangle_horizontal.png", ccp(510, winSize.height - 190)),
                    playerBall->getZOrder(), KBodyTypeRectangleHor);
-    this->addChild(KenGameUtils::createSprite("game_triangle.png", ccp(110, winSize.height - 861)), playerBall->getZOrder(), KBodyTypeTriangle);
-    this->addChild(KenGameUtils::createSprite("game_square.png", ccp(535, winSize.height - 855)), playerBall->getZOrder(), KBodyTypeSquare);
+    gameLayer->addChild(KenGameUtils::createSprite("game_triangle.png", ccp(110, winSize.height - 861)), playerBall->getZOrder(), KBodyTypeTriangle);
+    gameLayer->addChild(KenGameUtils::createSprite("game_square.png", ccp(535, winSize.height - 855)), playerBall->getZOrder(), KBodyTypeSquare);
     
-    this->addChild(playerBall);
+    gameLayer->addChild(playerBall);
 }
 
 void HoldOnGame::startGame(){
@@ -203,7 +193,7 @@ void HoldOnGame::startGame(){
     HoldOnModel::shareModel()->resetLevelScore();
     
     for (int i = KBodyTypeRectangleVer; i <= KBodyTypeSquare; i++) {
-        CCSprite* sprite = (CCSprite*)this->getChildByTag(i);
+        CCSprite* sprite = (CCSprite*)gameLayer->getChildByTag(i);
         if (sprite) {
             //add box2d body
             b2FixtureDef birdFixtureDef;
@@ -216,10 +206,6 @@ void HoldOnGame::startGame(){
 //                    b2Vec2((rect.origin.x + rect.size.width / 2) / PTM_RATIO, rect.origin.y / PTM_RATIO),
 //                    b2Vec2((rect.origin.x + rect.size.width) / PTM_RATIO, (rect.origin.x + rect.size.width) / PTM_RATIO),
 //                    b2Vec2(rect.origin.x / PTM_RATIO, (rect.origin.x + rect.size.width) / PTM_RATIO)
-//                    
-////                    b2Vec2((rect.origin.x) / PTM_RATIO, (rect.origin.y) / PTM_RATIO),
-////                    b2Vec2((rect.origin.x + rect.size.width / 2) / PTM_RATIO, (rect.origin.y + rect.size.height) / PTM_RATIO),
-////                    b2Vec2((rect.origin.x + rect.size.width) / PTM_RATIO, (rect.origin.y) / PTM_RATIO)
 //                };
 //                polygonShape.Set(vecs, 3);
 //                
@@ -248,7 +234,10 @@ void HoldOnGame::startGame(){
             
             b2BodyDef birdBodyDef;
             birdBodyDef.type = b2_dynamicBody;
-            birdBodyDef.position.Set(sprite->getPositionX() / PTM_RATIO, sprite->getPositionY() / PTM_RATIO);
+            
+            float heightOff = (CCDirector::sharedDirector()->getWinSize().height - gameLayer->getContentSize().height) / 2;
+            
+            birdBodyDef.position.Set(sprite->getPositionX() / PTM_RATIO, (sprite->getPositionY() + heightOff) / PTM_RATIO);
             b2Body* birdBody = gameWorld->CreateBody(&birdBodyDef);
             birdBody->SetUserData(sprite);
             birdBody->CreateFixture(&birdFixtureDef);
@@ -278,12 +267,12 @@ void HoldOnGame::gameOver(){
             break;
         case 1:{
             CCLog("gameOver() step = %d", step);
-            CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-            this->addChild(KenGameUtils::createSprite("game_over.png", ccp(320, winSize.height - 458)));
+            CCSize winSize = gameLayer->getContentSize();
+            gameLayer->addChild(KenGameUtils::createSprite("game_over.png", ccp(320, winSize.height - 458)));
             
             playerBall->runAction(CCFadeOut::create(2));
             for (int i = KBodyTypeRectangleVer; i <= KBodyTypeSquare; i++) {
-                CCSprite* sprite = (CCSprite*)this->getChildByTag(i);
+                CCSprite* sprite = (CCSprite*)gameLayer->getChildByTag(i);
                 if (sprite) {
                     if (i == KBodyTypeSquare) {
                         CCCallFuncN* callbakc = CCCallFuncN::create(this, callfuncN_selector(HoldOnGame::gameOver));
@@ -351,7 +340,8 @@ void HoldOnGame::updateBody(float delta){
             CCSprite *myActor = (CCSprite*)b->GetUserData();
             if (myActor){
                 //Synchronize the AtlasSprites position and rotation with the corresponding body
-                myActor->setPosition(CCPointMake( b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO));
+                float heightOff = (CCDirector::sharedDirector()->getWinSize().height - gameLayer->getContentSize().height) / 2;
+                myActor->setPosition(CCPointMake( b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO - heightOff));
                 myActor->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
                 
                 //set velocity
@@ -366,79 +356,12 @@ void HoldOnGame::checkCollision(){
     //小球与障碍物
     CCRect ballRect = playerBall->boundingBox();
     for (int i = KBodyTypeRectangleVer; i <= KBodyTypeSquare; i++) {
-        CCSprite* sprite = (CCSprite*)this->getChildByTag(i);
+        CCSprite* sprite = (CCSprite*)gameLayer->getChildByTag(i);
         if (ballRect.intersectsRect(sprite->boundingBox())) {
             this->gameOver();
             break;
         }
     }
-    
-    
-//    // 子弹跟敌机
-//    CCRect bulletRec = bullet->boundingBox();
-//    
-//    CCObject* foeObj;
-//    CCARRAY_FOREACH(this->getFoePlanes(), foeObj){
-//        CCFoePlane *foePlane = (CCFoePlane *)foeObj;
-//        if (bulletRec.intersectsRect(foePlane->boundingBox())  ) {
-//            this->resetBullet();
-//            this->fowPlaneHitAnimation(foePlane);
-//            foePlane->hp = foePlane->hp - (isBigBullet?2:1);
-//            if (foePlane->hp<=0) {
-//                //CCLog("##### move out animation:   %d   for hp(%d)",foePlane->__id,foePlane->hp);
-//                this->fowPlaneBlowupAnimation(foePlane);
-//                //CCLog("##### move out begin:   %d   for hp(%d)",foePlane->__id,foePlane->hp);
-//                this->getFoePlanes()->removeObject(foePlane);
-//                //CCLog("##### move out end:   %d   for hp(%d)",foePlane->__id,foePlane->hp);
-//            }
-//        }
-//    }
-//    
-//    // 飞机跟打飞机
-//    CCRect playerRec = player->boundingBox();
-//    playerRec.origin.x += 25;
-//    playerRec.size.width -= 50;
-//    playerRec.origin.y -= 10;
-//    playerRec.size.height -= 10;
-//    
-//    CCObject *foeObj3;
-//    CCARRAY_FOREACH(this->getFoePlanes(), foeObj3){
-//        CCFoePlane *foePlane = (CCFoePlane *)foeObj3;
-//        if (playerRec.intersectsRect(foePlane->boundingBox()) ) {
-//            CCLog("@@@@@ shit,i was killed  by:   %d",foePlane->__id);
-//            
-//            this->playerBlowupAnimation();
-//            this->fowPlaneBlowupAnimation(foePlane);// 同归于尽
-//            this->getFoePlanes()->removeObject(foePlane);
-//            this->gameOver();
-//        }
-//    }
-//    
-//    // 飞机跟道具
-//    if (isVisible) {
-//        CCRect playerRec1 = player->boundingBox();
-//        CCRect propRec = this->getProp()->getProp()->boundingBox();
-//        if (playerRec1.intersectsRect(propRec)) {
-//            
-//            this->getProp()->getProp()->stopAllActions();
-//            this->getProp()->getProp()->removeFromParent();
-//            isVisible = false;
-//            
-//            if (this->getProp()->type == propsTypeBullet) {
-//                CCLog("========= 大力丸子");
-//                isBigBullet = true;
-//                isChangeBullet = true;
-//            }else if (this->getProp()->type == propsTypeBomb) {
-//                CCLog("========= 意念一直线，敌人死光光");
-//                CCObject *foeObj4;
-//                CCARRAY_FOREACH(this->getFoePlanes(), foeObj4){
-//                    CCFoePlane *foePlane = (CCFoePlane *)foeObj4;
-//                    this->fowPlaneBlowupAnimation(foePlane);
-//                }
-//                this->getFoePlanes()->removeAllObjects();
-//            }
-//        }
-//    }
 }
 
 #pragma mark - touch
@@ -449,7 +372,7 @@ bool HoldOnGame::ccTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent
 
 void HoldOnGame::ccTouchMoved(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent){
     if (currentGameStatus == KGameStatusGaming) {
-        CCPoint touchLocation = this->convertTouchToNodeSpace(pTouch);
+        CCPoint touchLocation = gameLayer->convertTouchToNodeSpace(pTouch);
 //        CCPoint oldTouchLocation = pTouch->getPreviousLocationInView();
 //
 //        oldTouchLocation = CCDirector::sharedDirector()->convertToGL(oldTouchLocation);
@@ -486,6 +409,9 @@ void HoldOnGame::draw(){
     // This is only for debug purposes
     // It is recommend to disable it
     //
+    
+    return;
+    
     CCLayer::draw();
     
     ccGLEnableVertexAttribs( kCCVertexAttribFlag_Position );

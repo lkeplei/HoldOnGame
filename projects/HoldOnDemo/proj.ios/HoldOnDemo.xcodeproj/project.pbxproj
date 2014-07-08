@@ -157,6 +157,7 @@
 		1829C008196509F60046FDE5 /* HoldOnHome.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1829C007196509F60046FDE5 /* HoldOnHome.cpp */; };
 		1829C0101965212A0046FDE5 /* GLES-Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1829C00E1965212A0046FDE5 /* GLES-Render.cpp */; };
 		1829C0121965214E0046FDE5 /* KenGameUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1829C0111965214E0046FDE5 /* KenGameUtils.cpp */; };
+		184C718C196BE5B9007F74C7 /* HoldOnSceneBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184C718B196BE5B9007F74C7 /* HoldOnSceneBase.cpp */; };
 		188A5527196BCF6700C6BF08 /* KENDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 188A5526196BCF6700C6BF08 /* KENDataManager.m */; };
 		188A552A196BD48D00C6BF08 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 188A552C196BD48D00C6BF08 /* InfoPlist.strings */; };
 		18CB75591966490C00407C7F /* HoldOnGameScore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CB75581966490C00407C7F /* HoldOnGameScore.cpp */; };
@@ -624,6 +625,8 @@
 		1829C00F1965212A0046FDE5 /* GLES-Render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GLES-Render.h"; sourceTree = "<group>"; };
 		1829C0111965214E0046FDE5 /* KenGameUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KenGameUtils.cpp; sourceTree = "<group>"; };
 		1829C013196521590046FDE5 /* KenGameUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KenGameUtils.h; sourceTree = "<group>"; };
+		184C718A196BE5AF007F74C7 /* HoldOnSceneBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HoldOnSceneBase.h; sourceTree = "<group>"; };
+		184C718B196BE5B9007F74C7 /* HoldOnSceneBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HoldOnSceneBase.cpp; sourceTree = "<group>"; };
 		188A5525196BCF6700C6BF08 /* KENDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KENDataManager.h; sourceTree = "<group>"; };
 		188A5526196BCF6700C6BF08 /* KENDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KENDataManager.m; sourceTree = "<group>"; };
 		188A552B196BD48D00C6BF08 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1475,6 +1478,8 @@
 				18CB75581966490C00407C7F /* HoldOnGameScore.cpp */,
 				18CB7581196658A400407C7F /* HoldOnGame.cpp */,
 				18CB7583196658AD00407C7F /* HoldOnGame.h */,
+				184C718A196BE5AF007F74C7 /* HoldOnSceneBase.h */,
+				184C718B196BE5B9007F74C7 /* HoldOnSceneBase.cpp */,
 			);
 			path = scene;
 			sourceTree = "<group>";
@@ -2352,6 +2357,7 @@
 				15A3D9071682F7D5002FB0C5 /* b2ChainShape.cpp in Sources */,
 				15A3D9081682F7D5002FB0C5 /* b2CircleShape.cpp in Sources */,
 				15A3D9091682F7D5002FB0C5 /* b2EdgeShape.cpp in Sources */,
+				184C718C196BE5B9007F74C7 /* HoldOnSceneBase.cpp in Sources */,
 				15A3D90A1682F7D5002FB0C5 /* b2PolygonShape.cpp in Sources */,
 				15A3D90B1682F7D5002FB0C5 /* b2BlockAllocator.cpp in Sources */,
 				18CB758D19669A8200407C7F /* HoldOnModel.mm in Sources */,

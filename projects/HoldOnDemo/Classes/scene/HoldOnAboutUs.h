@@ -9,15 +9,13 @@
 #ifndef __HOLDONABOUTUS_SCENE_H__
 #define __HOLDONABOUTUS_SCENE_H__
 
-#include "cocos2d.h"
+#include "HoldOnSceneBase.h"
 
-using namespace cocos2d;
-
-class HoldOnAboutUs : public CCLayer
+class HoldOnAboutUs : public HoldOnBase
 {
 public:
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
-    virtual bool init();
+    virtual void initScene();
     
     // there's no 'id' in cpp, so we recommand to return the exactly class pointer
     static CCScene* scene();

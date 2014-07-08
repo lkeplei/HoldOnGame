@@ -30,30 +30,21 @@ CCScene* HoldOnAboutUs::scene()
     return scene;
 }
 
-bool HoldOnAboutUs::init(){
-    bool bRet = false;
-    do
-    {
-        CC_BREAK_IF(! CCLayer::init());
-        CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-        //create bg
-        this->addChild(KenGameUtils::createSprite("app_bg.png", ccp(320, winSize.height / 2)), -1);
-        
-        this->addChild(KenGameUtils::createSprite("about_bg.png", ccp(320, winSize.height / 2)));
-        this->addChild(KenGameUtils::createSprite("about_dandan.png", ccp(320, winSize.height - 81)));
-        
-        //create menu
-        CCMenuItemImage* item1 = KenGameUtils::createMenuItemImage("app_back.png", "app_back_sec.png", this,
-                                                                   menu_selector(HoldOnAboutUs::menuBack),
-                                                                   ccp(50, winSize.height - 81));
-        CCMenu* pMenu = CCMenu::create(item1, NULL);
-        pMenu->setPosition(CCPointZero);
-        this->addChild(pMenu, 1);
-        
-        bRet = true;
-    } while (0);
+void HoldOnAboutUs::initScene(){
+    CCSize winSize = gameLayer->getContentSize();
+    //create bg
+    gameLayer->addChild(KenGameUtils::createSprite("app_bg.png", ccp(320, winSize.height / 2)), -1);
     
-    return bRet;
+    gameLayer->addChild(KenGameUtils::createSprite("about_bg.png", ccp(320, winSize.height / 2)));
+    gameLayer->addChild(KenGameUtils::createSprite("about_dandan.png", ccp(320, winSize.height - 81)));
+    
+    //create menu
+    CCMenuItemImage* item1 = KenGameUtils::createMenuItemImage("app_back.png", "app_back_sec.png", this,
+                                                               menu_selector(HoldOnAboutUs::menuBack),
+                                                               ccp(50, winSize.height - 81));
+    CCMenu* pMenu = CCMenu::create(item1, NULL);
+    pMenu->setPosition(CCPointZero);
+    gameLayer->addChild(pMenu, 1);
 }
 
 #pragma mark - menu call back
