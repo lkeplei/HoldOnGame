@@ -50,6 +50,9 @@ void HoldOnModel::reportScore(){
     [[GameKitHelper sharedGameKitHelper] reportScore:gameScore];
 }
 
+bool HoldOnModel::isPad(){
+    return IsPad;
+}
 
 bool HoldOnModel::isLanguageEnglish(){
     NSUserDefaults* defs = [NSUserDefaults standardUserDefaults];

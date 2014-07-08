@@ -25,6 +25,7 @@ public:
     void showGameCenterLoader();
     
     bool isLanguageEnglish();
+    bool isPad();
     float getBodyVelocity(HoldOnBodyType type);
     
     //music         参考：http://www.2cto.com/kf/201306/217740.html
