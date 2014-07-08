@@ -71,6 +71,8 @@ bool HoldOnGameScore::init(){
         
         this->scheduleUpdate();     //开启计时刷新
         
+        effectId = HoldOnModel::shareModel()->playEffect(KEffectTypeNumberRoll, true);    //数字滚动音效播放
+        
         bRet = true;
     } while (0);
     
@@ -78,6 +80,20 @@ bool HoldOnGameScore::init(){
 }
 
 #pragma mark - parent method
+void HoldOnGameScore::showHighScore(){
+    HoldOnModel::shareModel()->stopEffect(effectId);    //数字音效结束播放
+    HoldOnModel::shareModel()->playEffect(KEffectTypeNewRecorder);      //新记录音效
+    
+    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    CCSprite* scoreSprite = KenGameUtils::createSprite("score_high.png", ccp(478, winSize.height - 371));
+    this->addChild(scoreSprite);
+    
+//            CCScaleTo* scaleTo = CCScaleTo::create(0, 1.3);
+//            scoreSprite->runAction(scaleTo);
+//            CCScaleTo* actionScaleTo = CCScaleTo::create(1, 0.8);
+//            scoreSprite->runAction(actionScaleTo);
+}
+
 void HoldOnGameScore::update(float delta){
     if (currentScore < HoldOnModel::shareModel()->getGameScore()) {
         currentScore += 100;
@@ -87,30 +103,27 @@ void HoldOnGameScore::update(float delta){
         gameScore->setString(scoreString);
         
         if (currentScore >= HoldOnModel::shareModel()->getGameScore()) {
-            CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-            CCSprite* scoreSprite = KenGameUtils::createSprite("score_high.png", ccp(478, winSize.height - 371));
-            this->addChild(scoreSprite);
-            
-//            CCScaleTo* scaleTo = CCScaleTo::create(0, 1.3);
-//            scoreSprite->runAction(scaleTo);
-//            CCScaleTo* actionScaleTo = CCScaleTo::create(1, 0.8);
-//            scoreSprite->runAction(actionScaleTo);
+            showHighScore();
         }
     }
 }
 
 #pragma mark - menu call back
 void HoldOnGameScore::menuStartGame(CCObject* pSender){
-    CCLOG("menuStartGame");
+    HoldOnModel::shareModel()->playEffect(KEffectTypeAnJian);      //按键音效
+    
     CCDirector::sharedDirector()->replaceScene(HoldOnGame::scene());
 }
 
 void HoldOnGameScore::menuGameCenter(CCObject* pSender){
-    CCLOG("menuGameCenter");
+    HoldOnModel::shareModel()->playEffect(KEffectTypeAnJian);      //按键音效
+    
     HoldOnModel::shareModel()->showGameCenterLoader();
 }
 
 void HoldOnGameScore::menuJumpToHome(CCObject* pSender){
+    HoldOnModel::shareModel()->playEffect(KEffectTypeAnJian);      //按键音效
+    
     currentScore = 0;
     CCDirector::sharedDirector()->replaceScene(HoldOnHome::scene());
 }

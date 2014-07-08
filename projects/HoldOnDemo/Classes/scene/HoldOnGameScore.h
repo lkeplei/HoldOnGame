@@ -32,8 +32,11 @@ public:
     void menuJumpToHome(CCObject* pSender);
     
 private:
+    void showHighScore();
+    
     CCLabelAtlas* gameScore;
     uint32_t currentScore;
+    unsigned int effectId;
 };
 
 #endif  // _HOLDONGAMESCORE_SCENE_H_

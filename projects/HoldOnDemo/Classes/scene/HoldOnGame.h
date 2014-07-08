@@ -15,7 +15,9 @@
 
 using namespace cocos2d;
 
-class HoldOnGame : public CCLayer
+class HoldOnGame
+: public CCLayer
+, public b2ContactListener
 {
 public:
     typedef enum {
@@ -48,6 +50,13 @@ public:
     
     //for debug
     virtual void draw();
+    
+    //for contact
+    /// Called when two fixtures begin to touch.
+    virtual void BeginContact(b2Contact* contact);
+    /// Called when two fixtures cease to touch.
+    virtual void EndContact(b2Contact* contact);
+    
 private:
     void startGame();
     void createB2world();

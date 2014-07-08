@@ -61,12 +61,12 @@ bool HoldOnHome::init(){
         CCMenuItemImage* item4 = KenGameUtils::createMenuItemImage("home_sound_close.png", "home_sound_close_sec.png", this,
                                                                    menu_selector(HoldOnHome::menuCloseSound),
                                                                    ccp(572, winSize.height - 892));
-        item4->setVisible(false);
+        item4->setVisible(!HoldOnModel::shareModel()->getEffectStatus());
         item4->setTag(2004);
         CCMenuItemImage* item5 = KenGameUtils::createMenuItemImage("home_sound_open.png", "home_sound_open_sec.png", this,
                                                                    menu_selector(HoldOnHome::menuOpenSound),
                                                                    ccp(572, winSize.height - 892));
-        item5->setVisible(true);
+        item5->setVisible(HoldOnModel::shareModel()->getEffectStatus());
         item5->setTag(2005);
         
         CCMenu* pMenu = CCMenu::create(item1, item2, item3, item4, item5, NULL);
@@ -81,22 +81,25 @@ bool HoldOnHome::init(){
 
 #pragma mark - menu call back
 void HoldOnHome::menuStartGame(CCObject* pSender){
-    CCLOG("HoldOnHome::menuStartGame");
+    HoldOnModel::shareModel()->playEffect(KEffectTypeAnJian);      //按键音效
+    
     CCDirector::sharedDirector()->replaceScene(HoldOnGame::scene());
 }
 
 void HoldOnHome::menuGameCenter(CCObject* pSender){
-    CCLOG("HoldOnHome::menuGameCenter");
+    HoldOnModel::shareModel()->playEffect(KEffectTypeAnJian);      //按键音效
+    
     HoldOnModel::shareModel()->showGameCenterLoader();
 }
 
 void HoldOnHome::menuAboutUs(CCObject* pSender){
-    CCLOG("HoldOnHome::menuAboutUs");
+    HoldOnModel::shareModel()->playEffect(KEffectTypeAnJian);      //按键音效
+    
     CCDirector::sharedDirector()->pushScene(HoldOnAboutUs::scene());
 }
 
 void HoldOnHome::menuOpenSound(CCObject* pSender){
-    CCLOG("HoldOnHome::menuOpenSound");
+    HoldOnModel::shareModel()->playEffect(KEffectTypeAnJian);      //按键音效
     
     CCMenu* menu = (CCMenu*)this->getChildByTag(1000);
     CCMenuItemImage* item = (CCMenuItemImage*)menu->getChildByTag(2004);
@@ -108,7 +111,7 @@ void HoldOnHome::menuOpenSound(CCObject* pSender){
 }
 
 void HoldOnHome::menuCloseSound(CCObject* pSender){
-    CCLOG("HoldOnHome::menuCloseSound");
+    HoldOnModel::shareModel()->playEffect(KEffectTypeAnJian);      //按键音效
     
     CCMenu* menu = (CCMenu*)this->getChildByTag(1000);
     CCMenuItemImage* item = (CCMenuItemImage*)menu->getChildByTag(2004);

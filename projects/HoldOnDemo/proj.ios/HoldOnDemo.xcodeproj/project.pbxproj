@@ -157,6 +157,8 @@
 		1829C008196509F60046FDE5 /* HoldOnHome.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1829C007196509F60046FDE5 /* HoldOnHome.cpp */; };
 		1829C0101965212A0046FDE5 /* GLES-Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1829C00E1965212A0046FDE5 /* GLES-Render.cpp */; };
 		1829C0121965214E0046FDE5 /* KenGameUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1829C0111965214E0046FDE5 /* KenGameUtils.cpp */; };
+		188A5527196BCF6700C6BF08 /* KENDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 188A5526196BCF6700C6BF08 /* KENDataManager.m */; };
+		188A552A196BD48D00C6BF08 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 188A552C196BD48D00C6BF08 /* InfoPlist.strings */; };
 		18CB75591966490C00407C7F /* HoldOnGameScore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CB75581966490C00407C7F /* HoldOnGameScore.cpp */; };
 		18CB7563196653FE00407C7F /* score_back_home.png in Resources */ = {isa = PBXBuildFile; fileRef = 18CB755B196653FE00407C7F /* score_back_home.png */; };
 		18CB7564196653FE00407C7F /* score_back_home_sec.png in Resources */ = {isa = PBXBuildFile; fileRef = 18CB755C196653FE00407C7F /* score_back_home_sec.png */; };
@@ -622,6 +624,10 @@
 		1829C00F1965212A0046FDE5 /* GLES-Render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GLES-Render.h"; sourceTree = "<group>"; };
 		1829C0111965214E0046FDE5 /* KenGameUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KenGameUtils.cpp; sourceTree = "<group>"; };
 		1829C013196521590046FDE5 /* KenGameUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KenGameUtils.h; sourceTree = "<group>"; };
+		188A5525196BCF6700C6BF08 /* KENDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KENDataManager.h; sourceTree = "<group>"; };
+		188A5526196BCF6700C6BF08 /* KENDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KENDataManager.m; sourceTree = "<group>"; };
+		188A552B196BD48D00C6BF08 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		188A552D196BD4A800C6BF08 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		18CB75571966490200407C7F /* HoldOnGameScore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HoldOnGameScore.h; sourceTree = "<group>"; };
 		18CB75581966490C00407C7F /* HoldOnGameScore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HoldOnGameScore.cpp; sourceTree = "<group>"; };
 		18CB755B196653FE00407C7F /* score_back_home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = score_back_home.png; sourceTree = "<group>"; };
@@ -943,6 +949,7 @@
 				1AC3624616D4A1E8000847F2 /* Prefix.pch */,
 				1AFCDA8016D4A25900906EA6 /* RootViewController.h */,
 				1AFCDA8116D4A25900906EA6 /* RootViewController.mm */,
+				188A552C196BD48D00C6BF08 /* InfoPlist.strings */,
 			);
 			name = ios;
 			path = Classes;
@@ -1529,6 +1536,8 @@
 		1829C00D196521050046FDE5 /* tools */ = {
 			isa = PBXGroup;
 			children = (
+				188A5525196BCF6700C6BF08 /* KENDataManager.h */,
+				188A5526196BCF6700C6BF08 /* KENDataManager.m */,
 				1829C00E1965212A0046FDE5 /* GLES-Render.cpp */,
 				1829C00F1965212A0046FDE5 /* GLES-Render.h */,
 				1829C0111965214E0046FDE5 /* KenGameUtils.cpp */,
@@ -2232,6 +2241,7 @@
 				Japanese,
 				French,
 				German,
+				"zh-Hans",
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -2264,6 +2274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1829C0001965094F0046FDE5 /* home_sound_open.png in Resources */,
+				188A552A196BD48D00C6BF08 /* InfoPlist.strings in Resources */,
 				18CB759B1966AA2800407C7F /* effect_new_recorder.mp3 in Resources */,
 				0474DD8E19695C56003B99D8 /* app_font_big.png in Resources */,
 				1806AB6E19653C2000773641 /* about_bg.png in Resources */,
@@ -2561,6 +2572,7 @@
 				379BB9C617F03F3700829B88 /* UILoadingBar.cpp in Sources */,
 				379BB9C717F03F3700829B88 /* UISlider.cpp in Sources */,
 				379BB9C917F03F3700829B88 /* UITextField.cpp in Sources */,
+				188A5527196BCF6700C6BF08 /* KENDataManager.m in Sources */,
 				379BB9CB17F03F3700829B88 /* DictionaryHelper.cpp in Sources */,
 				379BB9D317F03F3700829B88 /* GUIReader.cpp in Sources */,
 				379BB9D417F03F3700829B88 /* SceneReader.cpp in Sources */,
@@ -2576,6 +2588,18 @@
 			targetProxy = 15A3DA681682F881002FB0C5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		188A552C196BD48D00C6BF08 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				188A552B196BD48D00C6BF08 /* en */,
+				188A552D196BD4A800C6BF08 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		1D6058940D05DD3E006BFB54 /* Debug */ = {

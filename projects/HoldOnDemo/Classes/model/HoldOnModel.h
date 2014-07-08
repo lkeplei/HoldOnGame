@@ -28,7 +28,8 @@ public:
     float getBodyVelocity(HoldOnBodyType type);
     
     //music         参考：http://www.2cto.com/kf/201306/217740.html
-    void playEffect(HoldOnEffectType type);
+    unsigned int playEffect(HoldOnEffectType type, bool bLoop=false);
+    void stopEffect(unsigned int nSoundId);
     void closeEffect();
     void openEffect();
     
@@ -37,6 +38,7 @@ public:
     uint16_t getGameLevel(){return gameLevel;}
     uint32_t getGameScore(){return gameScore;}
     double getGameTime(){return gameTime;}
+    bool getEffectStatus();
     
 private:
     uint16_t gameLevel;

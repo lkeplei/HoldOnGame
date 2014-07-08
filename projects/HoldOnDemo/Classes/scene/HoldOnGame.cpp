@@ -80,8 +80,11 @@ void HoldOnGame::timerAnimation(){
     } else {
         CCSize winSize = CCDirector::sharedDirector()->getWinSize();
         switch (step) {
-            case 1:
+            case 1:{
+                HoldOnModel::shareModel()->playEffect(KEffectTypeTime);      //计时音效
+                
                 timer = KenGameUtils::createSprite("game_time_3.png", ccp(320, winSize.height - 386));
+            }
                 break;
             case 2:
                 timer = KenGameUtils::createSprite("game_time_2.png", ccp(320, winSize.height - 386));
@@ -151,6 +154,11 @@ void HoldOnGame::createB2world(){
     groundBox.Set(b2Vec2(winSize.width / PTM_RATIO, winSize.height / PTM_RATIO), b2Vec2(winSize.width / PTM_RATIO,0));
     birdFixtureDef.shape = &groundBox;
     groundBody->CreateFixture(&birdFixtureDef);
+    
+//    contactListener = new MyContactListener();
+    gameWorld->SetContactListener(this);
+    //Preload effect
+//    SimpleAudioEngine.sharedEngine().preloadEffect(@"resource/hahaha");
     
     //debug
     GLESDebugDraw* m_debugDraw = new GLESDebugDraw( PTM_RATIO );
@@ -257,7 +265,8 @@ void HoldOnGame::gameOver(){
     static int step = 0;
     switch (step) {
         case 0:{
-            CCLog("gameOver() step = %d", step);
+            HoldOnModel::shareModel()->playEffect(KEffectTypeGameOver);      //游戏结束音效
+            
             CCCallFuncN* callbakc = CCCallFuncN::create(this, callfuncN_selector(HoldOnGame::gameOver));
             CCSequence* actionSeq = CCSequence::create(CCBlink::create(2, 4), callbakc, NULL);
             playerBall->runAction(actionSeq);
@@ -300,6 +309,15 @@ void HoldOnGame::gameOver(){
             step = 0;
             break;
     }
+}
+
+#pragma mark - contact
+void HoldOnGame::BeginContact(b2Contact* contact){
+    HoldOnModel::shareModel()->playEffect(KEffectTypeCollision);      //碰撞音效
+}
+
+void HoldOnGame::EndContact(b2Contact* contact){
+    B2_NOT_USED(contact);
 }
 
 #pragma mark - parent method

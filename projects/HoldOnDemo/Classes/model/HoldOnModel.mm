@@ -10,6 +10,7 @@
 #include "HoldOnConfig.h"
 #include "SimpleAudioEngine.h"
 
+#import "KENDataManager.h"
 #import "GameKitHelper.h"
 
 static HoldOnModel* s_ShareModel = NULL;
@@ -30,7 +31,9 @@ HoldOnModel::HoldOnModel()
 , levelTime(0)
 , scoreTime(0)
 {
-    
+    if ([KENDataManager getDataByKey:KUserDefaultSetOpenVoice] == nil) {
+        [KENDataManager setDataByKey:[NSNumber numberWithBool:YES] forkey:KUserDefaultSetOpenVoice];
+    }
 };
 
 HoldOnModel::~HoldOnModel(){
@@ -87,51 +90,69 @@ float HoldOnModel::getBodyVelocity(HoldOnBodyType type){
 }
 
 #pragma mark - music
-void HoldOnModel::playEffect(HoldOnEffectType type){
-    switch (type) {
-        case KEffectTypeAnJian:{
-            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_an_jian.mp3");
+unsigned int HoldOnModel::playEffect(HoldOnEffectType type, bool bLoop){
+    unsigned int resId = -1;
+    
+    if (getEffectStatus()) {
+        switch (type) {
+            case KEffectTypeAnJian:{
+                resId = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_an_jian.mp3", bLoop);
+            }
+                break;
+            case KEffectTypeCollision:{
+                resId = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_collision.mp3", bLoop);
+            }
+                break;
+            case KEffectTypeGameOver:{
+                resId = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_game_over.mp3", bLoop);
+            }
+                break;
+            case KEffectTypeNewRecorder:{
+                resId = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_new_recorder.mp3", bLoop);
+            }
+                break;
+            case KEffectTypeNumberRoll:{
+                resId = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_number_roll.mp3", bLoop);
+            }
+                break;
+            case KEffectTypeTime:{
+                resId = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_time.mp3", bLoop);
+            }
+                break;
+            case KEffectTypeUpgrade:{
+                resId = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_upgrade.mp3", bLoop);
+            }
+                break;
+            case KEffectTypeBackground:{
+                CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("effect_background.mp3", true);
+            }
+                break;
+            default:
+                break;
         }
-            break;
-        case KEffectTypeCollision:{
-            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_collision.mp3");
-        }
-            break;
-        case KEffectTypeGameOver:{
-            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_game_over.mp3");
-        }
-            break;
-        case KEffectTypeNewRecorder:{
-            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_new_recorder.mp3");
-        }
-            break;
-        case KEffectTypeNumberRoll:{
-            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_number_roll.mp3");
-        }
-            break;
-        case KEffectTypeTime:{
-            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_time.mp3");
-        }
-            break;
-        case KEffectTypeUpgrade:{
-            CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("effect_upgrade.mp3");
-        }
-            break;
-        case KEffectTypeBackground:{
-            CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("effect_background.mp3", true);
-        }
-            break;
-        default:
-            break;
     }
+    
+    return resId;
+}
+
+void HoldOnModel::stopEffect(unsigned int nSoundId){
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->stopEffect(nSoundId);
 }
 
 void HoldOnModel::closeEffect(){
+    [KENDataManager setDataByKey:[NSNumber numberWithBool:NO] forkey:KUserDefaultSetOpenVoice];
+    
     CocosDenshion::SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
 }
 
 void HoldOnModel::openEffect(){
+    [KENDataManager setDataByKey:[NSNumber numberWithBool:YES] forkey:KUserDefaultSetOpenVoice];
+    
     playEffect(KEffectTypeBackground);
+}
+
+bool HoldOnModel::getEffectStatus(){
+    return [[KENDataManager getDataByKey:KUserDefaultSetOpenVoice] boolValue];
 }
 
 #pragma mark - score
@@ -154,6 +175,8 @@ void HoldOnModel::updateGameTime(float delta){
         gameLevel++;
         levelTime -= 10;
         scoreTime -= 1;
+        
+        playEffect(KEffectTypeUpgrade);     //难度升级音效
     } else if (scoreTime >= 1){
         gameScore += gameLevel * 100;
         scoreTime -= 1;

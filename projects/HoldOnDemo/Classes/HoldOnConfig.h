@@ -13,6 +13,8 @@
 #define PTM_RATIO  (32.0)
 #define KInitialVelocity        (4)
 
+#define KUserDefaultSetOpenVoice             @"default_open_voice"
+
 #define KLeaderBoardId          @"com.teamqi.holdon"
 
 #endif // __HOLDON_CONFIG_H__
