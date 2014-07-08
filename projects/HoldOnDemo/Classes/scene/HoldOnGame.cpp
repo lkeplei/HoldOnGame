@@ -253,8 +253,6 @@ void HoldOnGame::startGame(){
 }
 
 void HoldOnGame::gameOver(){
-    return;
-    
     currentGameStatus = KGameStatusOver;
     static int step = 0;
     switch (step) {

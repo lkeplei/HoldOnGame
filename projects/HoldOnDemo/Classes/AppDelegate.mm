@@ -1,5 +1,4 @@
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
 
 #import "GameKitHelper.h"
 
@@ -37,7 +36,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
     
     // create a scene. it's an autorelease object
     CCScene *pScene = HoldOnHome::scene();
-//    CCScene *pScene = HelloWorld::scene();
 
     // run
     pDirector->runWithScene(pScene);
