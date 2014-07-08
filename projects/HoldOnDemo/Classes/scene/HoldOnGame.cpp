@@ -140,7 +140,7 @@ void HoldOnGame::createB2world(){
     birdFixtureDef.shape = &groundBox;
     groundBody->CreateFixture(&birdFixtureDef);
     // top
-    groundBox.Set(b2Vec2(0, (winSize.height - 120) / PTM_RATIO), b2Vec2(winSize.width / PTM_RATIO, (winSize.height - 120) / PTM_RATIO));
+    groundBox.Set(b2Vec2(0, (winSize.height - 140) / PTM_RATIO), b2Vec2(winSize.width / PTM_RATIO, (winSize.height - 140) / PTM_RATIO));
     birdFixtureDef.shape = &groundBox;
     groundBody->CreateFixture(&birdFixtureDef);
     // left
@@ -198,11 +198,39 @@ void HoldOnGame::startGame(){
         CCSprite* sprite = (CCSprite*)this->getChildByTag(i);
         if (sprite) {
             //add box2d body
-            b2CircleShape birdShape;
-            birdShape.m_radius = sprite->getContentSize().width / PTM_RATIO / 2;
-            //CCLOG("%f",birdShape.m_radius);
             b2FixtureDef birdFixtureDef;
-            birdFixtureDef.shape = &birdShape;
+            
+            if (i == KBodyTypeTriangle) {
+//                CCRect rect = sprite->boundingBox();
+//                b2PolygonShape polygonShape;
+//
+//                b2Vec2 vecs[] = {
+//                    b2Vec2((rect.origin.x + rect.size.width / 2) / PTM_RATIO, rect.origin.y / PTM_RATIO),
+//                    b2Vec2((rect.origin.x + rect.size.width) / PTM_RATIO, (rect.origin.x + rect.size.width) / PTM_RATIO),
+//                    b2Vec2(rect.origin.x / PTM_RATIO, (rect.origin.x + rect.size.width) / PTM_RATIO)
+//                    
+////                    b2Vec2((rect.origin.x) / PTM_RATIO, (rect.origin.y) / PTM_RATIO),
+////                    b2Vec2((rect.origin.x + rect.size.width / 2) / PTM_RATIO, (rect.origin.y + rect.size.height) / PTM_RATIO),
+////                    b2Vec2((rect.origin.x + rect.size.width) / PTM_RATIO, (rect.origin.y) / PTM_RATIO)
+//                };
+//                polygonShape.Set(vecs, 3);
+//                
+//                birdFixtureDef.shape = &polygonShape;
+                
+                b2CircleShape circleShape;
+                circleShape.m_radius = sprite->getContentSize().width / PTM_RATIO / 2;
+                
+                birdFixtureDef.shape = &circleShape;
+            } else {
+                CCRect rect = sprite->boundingBox();
+                b2PolygonShape polygonShape;
+                
+                polygonShape.SetAsBox(rect.size.width / PTM_RATIO / 2, rect.size.height / PTM_RATIO / 2);
+                
+                birdFixtureDef.shape = &polygonShape;
+            }
+            
+            //CCLOG("%f",birdShape.m_radius);
             birdFixtureDef.density = 0.001;             //密度
             birdFixtureDef.friction = 0;                //摩擦力
             birdFixtureDef.restitution = 1;             //弹力
@@ -225,6 +253,8 @@ void HoldOnGame::startGame(){
 }
 
 void HoldOnGame::gameOver(){
+    return;
+    
     currentGameStatus = KGameStatusOver;
     static int step = 0;
     switch (step) {
