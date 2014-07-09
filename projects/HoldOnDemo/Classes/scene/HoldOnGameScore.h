@@ -34,6 +34,7 @@ private:
     
     CCLabelAtlas* gameScore;
     uint32_t currentScore;
+    uint16_t offsetScore;
     unsigned int effectId;
 };
 

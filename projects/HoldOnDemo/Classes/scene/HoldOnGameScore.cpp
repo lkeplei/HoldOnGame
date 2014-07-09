@@ -11,6 +11,7 @@
 #include "HoldOnHome.h"
 #include "KenGameUtils.h"
 #include "HoldOnModel.h"
+#include "HoldOnConfig.h"
 
 CCScene* HoldOnGameScore::scene()
 {
@@ -64,6 +65,7 @@ void HoldOnGameScore::initScene(){
     gameLayer->addChild(gameScore);
     
     currentScore = 0;
+    offsetScore = 0;
     
     this->scheduleUpdate();     //开启计时刷新
     
@@ -78,16 +80,18 @@ void HoldOnGameScore::showHighScore(){
     CCSize winSize = gameLayer->getContentSize();
     CCSprite* scoreSprite = KenGameUtils::createSprite("score_high.png", ccp(478, winSize.height - 371));
     gameLayer->addChild(scoreSprite);
-    
-//            CCScaleTo* scaleTo = CCScaleTo::create(0, 1.3);
-//            scoreSprite->runAction(scaleTo);
-//            CCScaleTo* actionScaleTo = CCScaleTo::create(1, 0.8);
-//            scoreSprite->runAction(actionScaleTo);
 }
 
 void HoldOnGameScore::update(float delta){
+    if (currentScore <= 0) {
+        offsetScore = HoldOnModel::shareModel()->getGameScore() / (25 * KScoreOffTime);
+        offsetScore = offsetScore <= 0 ? 1 : offsetScore;
+        
+        CCLOG("offsetScore = %d", offsetScore);
+    }
+    
     if (currentScore < HoldOnModel::shareModel()->getGameScore()) {
-        currentScore += 100;
+        currentScore += offsetScore;
         
         char scoreString[12];
         

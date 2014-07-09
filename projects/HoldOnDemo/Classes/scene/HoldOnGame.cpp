@@ -252,9 +252,6 @@ void HoldOnGame::startGame(){
 }
 
 void HoldOnGame::gameOver(){
-    
-//    return;
-    
     currentGameStatus = KGameStatusOver;
     static int step = 0;
     switch (step) {
@@ -363,9 +360,11 @@ void HoldOnGame::updateBody(float delta){
 void HoldOnGame::checkCollision(){
     //小球与障碍物
     CCRect ballRect = playerBall->boundingBox();
+    CCRect rect = CCRect(ballRect.origin.x + KBallOffset, ballRect.origin.y + KBallOffset,
+                         ballRect.size.width - KBallOffset * 2, ballRect.size.height - KBallOffset * 2);
     for (int i = KBodyTypeRectangleVer; i <= KBodyTypeSquare; i++) {
         CCSprite* sprite = (CCSprite*)gameLayer->getChildByTag(i);
-        if (ballRect.intersectsRect(sprite->boundingBox())) {
+        if (rect.intersectsRect(sprite->boundingBox())) {
             this->gameOver();
             break;
         }
@@ -423,7 +422,7 @@ void HoldOnGame::draw(){
     // It is recommend to disable it
     //
     
-//    return;
+    return;
     
     CCLayer::draw();
     
