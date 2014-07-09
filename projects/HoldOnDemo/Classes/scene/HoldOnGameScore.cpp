@@ -90,12 +90,16 @@ void HoldOnGameScore::update(float delta){
         currentScore += 100;
         
         char scoreString[12];
-        sprintf(scoreString, "%d", currentScore);
-        gameScore->setString(scoreString);
         
         if (currentScore >= HoldOnModel::shareModel()->getGameScore()) {
+            sprintf(scoreString, "%d", HoldOnModel::shareModel()->getGameScore());
+            
             showHighScore();
+        } else {
+            sprintf(scoreString, "%d", currentScore);
         }
+        
+        gameScore->setString(scoreString);
     }
 }
 

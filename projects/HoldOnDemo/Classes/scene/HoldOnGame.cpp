@@ -189,6 +189,8 @@ void HoldOnGame::createGameElement(){
 }
 
 void HoldOnGame::startGame(){
+    HoldOnModel::shareModel()->playEffect(KEffectTypeBackground);   //播放背景音乐
+    
     currentGameStatus = KGameStatusGaming;
     HoldOnModel::shareModel()->resetLevelScore();
     
@@ -250,10 +252,15 @@ void HoldOnGame::startGame(){
 }
 
 void HoldOnGame::gameOver(){
+    
+//    return;
+    
     currentGameStatus = KGameStatusOver;
     static int step = 0;
     switch (step) {
         case 0:{
+            HoldOnModel::shareModel()->countGameScore();
+            HoldOnModel::shareModel()->stopBackgroundMusic();   //停止播放背景音乐
             HoldOnModel::shareModel()->playEffect(KEffectTypeGameOver);      //游戏结束音效
             
             CCCallFuncN* callbakc = CCCallFuncN::create(this, callfuncN_selector(HoldOnGame::gameOver));
@@ -342,7 +349,8 @@ void HoldOnGame::updateBody(float delta){
                 //Synchronize the AtlasSprites position and rotation with the corresponding body
                 float heightOff = (CCDirector::sharedDirector()->getWinSize().height - gameLayer->getContentSize().height) / 2;
                 myActor->setPosition(CCPointMake( b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO - heightOff));
-                myActor->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
+//                myActor->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
+                b->SetAngularVelocity(0);
                 
                 //set velocity
                 float velocity = HoldOnModel::shareModel()->getBodyVelocity((HoldOnBodyType)myActor->getTag());
@@ -379,7 +387,12 @@ void HoldOnGame::ccTouchMoved(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent
 //        oldTouchLocation = this->convertToNodeSpace(oldTouchLocation);
 //
 //        CCPoint translation = ccpSub(touchLocation, oldTouchLocation);
-        playerBall->setPosition(touchLocation);
+        CCSize ballSize = playerBall->getContentSize();
+        CCSize contentSize = gameLayer->getContentSize();
+        if (touchLocation.x > ballSize.width / 2 && touchLocation.x < contentSize.width - ballSize.width / 2
+            && touchLocation.y > ballSize.height / 2 && touchLocation.y < contentSize.height - 140 - ballSize.height / 2) {
+            playerBall->setPosition(touchLocation);
+        }
     }
 }
 
@@ -410,7 +423,7 @@ void HoldOnGame::draw(){
     // It is recommend to disable it
     //
     
-    return;
+//    return;
     
     CCLayer::draw();
     

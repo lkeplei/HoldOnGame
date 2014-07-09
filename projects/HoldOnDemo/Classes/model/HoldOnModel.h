@@ -24,6 +24,7 @@ public:
     void reportScore();
     void showGameCenterLoader();
     
+    void initData();
     bool isLanguageEnglish();
     bool isPad();
     float getBodyVelocity(HoldOnBodyType type);
@@ -31,11 +32,13 @@ public:
     //music         参考：http://www.2cto.com/kf/201306/217740.html
     unsigned int playEffect(HoldOnEffectType type, bool bLoop=false);
     void stopEffect(unsigned int nSoundId);
+    void stopBackgroundMusic();
     void closeEffect();
     void openEffect();
     
     void resetLevelScore();
     void updateGameTime(float delta);
+    void countGameScore();
     uint16_t getGameLevel(){return gameLevel;}
     uint32_t getGameScore(){return gameScore;}
     double getGameTime(){return gameTime;}

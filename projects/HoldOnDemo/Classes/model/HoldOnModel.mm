@@ -12,6 +12,7 @@
 
 #import "KENDataManager.h"
 #import "GameKitHelper.h"
+#import "MobClick.h"
 
 static HoldOnModel* s_ShareModel = NULL;
 
@@ -31,13 +32,29 @@ HoldOnModel::HoldOnModel()
 , levelTime(0)
 , scoreTime(0)
 {
-    if ([KENDataManager getDataByKey:KUserDefaultSetOpenVoice] == nil) {
-        [KENDataManager setDataByKey:[NSNumber numberWithBool:YES] forkey:KUserDefaultSetOpenVoice];
-    }
+
 };
 
 HoldOnModel::~HoldOnModel(){
     
+}
+
+void HoldOnModel::initData(){
+    //初始数据
+    if ([KENDataManager getDataByKey:KUserDefaultSetOpenVoice] == nil) {
+        [KENDataManager setDataByKey:[NSNumber numberWithBool:YES] forkey:KUserDefaultSetOpenVoice];
+    }
+    
+    //初始友盟统计
+//    [MobClick setCrashReportEnabled:NO]; // 如果不需要捕捉异常，注释掉此行
+//    [MobClick setLogEnabled:YES];  // 打开友盟sdk调试，注意Release发布时需要注释掉此行,减少io消耗
+    [MobClick setAppVersion:XcodeAppVersion]; //参数为NSString * 类型,自定义app版本信息，如果不设置，默认从CFBundleVersion里取
+    
+    if (IsPad) {
+        [MobClick startWithAppkey:@"53bcd08356240bf086045566"];
+    } else {
+        [MobClick startWithAppkey:@"53bcd00d56240b0c1b01f0c4"];
+    }
 }
 
 void HoldOnModel::showGameCenterLoader(){
@@ -138,6 +155,10 @@ unsigned int HoldOnModel::playEffect(HoldOnEffectType type, bool bLoop){
     return resId;
 }
 
+void HoldOnModel::stopBackgroundMusic(){
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
+}
+
 void HoldOnModel::stopEffect(unsigned int nSoundId){
     CocosDenshion::SimpleAudioEngine::sharedEngine()->stopEffect(nSoundId);
 }
@@ -174,14 +195,21 @@ void HoldOnModel::updateGameTime(float delta){
     gameTime += delta;
     
     if (levelTime >= 10) {
-        gameScore += gameLevel * 100;
         gameLevel++;
         levelTime -= 10;
         scoreTime -= 1;
         
         playEffect(KEffectTypeUpgrade);     //难度升级音效
     } else if (scoreTime >= 1){
-        gameScore += gameLevel * 100;
         scoreTime -= 1;
     }
+}
+
+void HoldOnModel::countGameScore(){
+    for (int i = 1; i < gameLevel; i++) {
+        gameScore += 10 * 100 * i;
+    }
+
+    float time = (gameTime - (gameLevel - 1) * 10);
+    gameScore += gameLevel * 100 * time;
 }

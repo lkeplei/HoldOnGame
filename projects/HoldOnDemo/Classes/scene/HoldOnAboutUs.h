@@ -25,6 +25,11 @@ public:
 public:
     // a selector callback
     void menuBack(CCObject* pSender);
+    void menuDanDan(CCObject* pSender);
+    
+private:
+    CCSprite* dandanSprite;
+    bool showDanDan;
 };
 
 #endif // __HOLDONABOUTUS_SCENE_H__

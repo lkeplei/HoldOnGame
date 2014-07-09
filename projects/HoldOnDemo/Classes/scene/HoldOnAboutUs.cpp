@@ -36,19 +36,36 @@ void HoldOnAboutUs::initScene(){
     gameLayer->addChild(KenGameUtils::createSprite("app_bg.png", ccp(320, winSize.height / 2)), -1);
     
     gameLayer->addChild(KenGameUtils::createSprite("about_bg.png", ccp(320, winSize.height / 2)));
-    gameLayer->addChild(KenGameUtils::createSprite("about_dandan.png", ccp(320, winSize.height - 81)));
+    
+    dandanSprite = KenGameUtils::createSprite("about_dandan.png", ccp(320, winSize.height - 81));
+    showDanDan = false;
+    dandanSprite->setVisible(false);
+    gameLayer->addChild(dandanSprite);
     
     //create menu
     CCMenuItemImage* item1 = KenGameUtils::createMenuItemImage("app_back.png", "app_back_sec.png", this,
                                                                menu_selector(HoldOnAboutUs::menuBack),
                                                                ccp(50, winSize.height - 81));
-    CCMenu* pMenu = CCMenu::create(item1, NULL);
+    CCMenuItemImage* item2 = KenGameUtils::createMenuItemImage("about_team.png", "about_team.png", this,
+                                                               menu_selector(HoldOnAboutUs::menuDanDan),
+                                                               ccp(320, winSize.height - 689));
+    CCMenu* pMenu = CCMenu::create(item1, item2, NULL);
     pMenu->setPosition(CCPointZero);
     gameLayer->addChild(pMenu, 1);
 }
 
 #pragma mark - menu call back
 void HoldOnAboutUs::menuBack(CCObject* pSender){
-    CCLOG("menu back");
     CCDirector::sharedDirector()->popScene();
+}
+
+void HoldOnAboutUs::menuDanDan(CCObject* pSender){
+    dandanSprite->setVisible(true);
+    if (showDanDan) {
+        dandanSprite->runAction(CCFadeOut::create(1));
+    } else {
+        dandanSprite->runAction(CCFadeIn::create(1));
+    }
+    
+    showDanDan = !showDanDan;
 }

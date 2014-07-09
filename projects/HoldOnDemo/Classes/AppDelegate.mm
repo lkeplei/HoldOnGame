@@ -16,6 +16,10 @@ AppDelegate::~AppDelegate()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
+    //初始数据与服务
+    HoldOnModel::shareModel();
+    HoldOnModel::shareModel()->initData();
+    
     // initialize director
     CCDirector* pDirector = CCDirector::sharedDirector();
     CCEGLView* pEGLView = CCEGLView::sharedOpenGLView();
@@ -30,9 +34,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     //GameCenter登陆
     [[GameKitHelper sharedGameKitHelper] authenticateLocalUser];
-    
-    //播放背景音乐
-    HoldOnModel::shareModel()->playEffect(KEffectTypeBackground);
     
     // create a scene. it's an autorelease object
     CCScene *pScene = HoldOnHome::scene();
