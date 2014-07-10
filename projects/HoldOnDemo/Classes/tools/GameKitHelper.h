@@ -20,6 +20,9 @@
 - (void) authenticateLocalUser;
 - (void) showLeaderboard;
 - (void) reportScore:(uint32_t)score;    //上传得分
+- (void) whetherHighestScores:(uint32_t)score;      //是否为最高得分
 - (void) leaderboardViewControllerDidFinish:(GKLeaderboardViewController *)viewController;
+
+@property (assign) BOOL isNewRecord;
 
 @end

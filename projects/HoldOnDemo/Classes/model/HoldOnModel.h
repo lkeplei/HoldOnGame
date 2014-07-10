@@ -42,6 +42,7 @@ public:
     uint16_t getGameLevel(){return gameLevel;}
     uint32_t getGameScore(){return gameScore;}
     double getGameTime(){return gameTime;}
+    bool getIsNewRecord();
     bool getEffectStatus();
     
 private:

@@ -47,3 +47,7 @@ CCMenuItemImage* KenGameUtils::createMenuItemImage(const char *normalImage, cons
     menuItem->setPosition(position);
     return menuItem;
 }
+
+int KenGameUtils::randomBetweenInt(int max, int min){
+    return arc4random() % max + min;
+}

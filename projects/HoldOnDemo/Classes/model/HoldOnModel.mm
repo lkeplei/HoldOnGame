@@ -63,8 +63,12 @@ void HoldOnModel::showGameCenterLoader(){
 }
 
 void HoldOnModel::reportScore(){
-    //显示排行榜
     [[GameKitHelper sharedGameKitHelper] reportScore:gameScore];
+    [[GameKitHelper sharedGameKitHelper] whetherHighestScores:gameScore];
+}
+
+bool HoldOnModel::getIsNewRecord(){
+    return [[GameKitHelper sharedGameKitHelper] isNewRecord];
 }
 
 bool HoldOnModel::isPad(){

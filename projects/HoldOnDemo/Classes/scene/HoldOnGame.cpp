@@ -58,7 +58,6 @@ void HoldOnGame::initScene(){
 #pragma mark - private method
 void HoldOnGame::timerAnimation(){
     static int step = 1;
-    CCLog("timerAnimation step = %d", step);
     
     CCSprite* timer = (CCSprite*)gameLayer->getChildByTag(KGameTimerTag);
     if (timer) {
@@ -245,7 +244,12 @@ void HoldOnGame::startGame(){
             birdBody->CreateFixture(&birdFixtureDef);
 //            birdBody->ApplyForce(b2Vec2(-5.5f * distance * cos, -5.5f * distance * sin), birdBody->GetWorldCenter());
             float velocity = HoldOnModel::shareModel()->getBodyVelocity((HoldOnBodyType)i);
-            birdBody->SetLinearVelocity(b2Vec2(velocity, velocity));
+            
+            int velX = KenGameUtils::randomBetweenInt(2, 1) == 1 ? 1 : -1;
+            int velY = KenGameUtils::randomBetweenInt(2, 1) == 1 ? 1 : -1;
+            
+            birdBody->SetLinearVelocity(b2Vec2(velocity * velX, velocity * velY));
+
             birdBody->SetLinearDamping(0);
         }
     }
@@ -270,7 +274,6 @@ void HoldOnGame::gameOver(){
         }
             break;
         case 1:{
-            CCLog("gameOver() step = %d", step);
             CCSize winSize = gameLayer->getContentSize();
             gameLayer->addChild(KenGameUtils::createSprite("game_over.png", ccp(320, winSize.height - 458)));
             
@@ -292,7 +295,6 @@ void HoldOnGame::gameOver(){
         }
             break;
         case 2:{
-            CCLog("gameOver() step = %d", step);
             CCDirector::sharedDirector()->replaceScene(HoldOnGameScore::scene());
             
             step = 0;
@@ -459,7 +461,6 @@ void HoldOnGame::registerWithTouchDispatcher(){
 
 #pragma mark - menu call back
 void HoldOnGame::menuBack(CCObject* pSender){
-    CCLOG("menu back");
     CCDirector::sharedDirector()->replaceScene(HoldOnHome::scene());
 }
 

@@ -9,6 +9,8 @@
 #import "GameKitHelper.h"
 #include "HoldOnConfig.h"
 
+//#import "HoldOnModel.h"
+
 @implementation GameKitHelper
 
 @synthesize gameCenterAvailable;
@@ -82,6 +84,34 @@ static UIViewController* currentModalViewController = nil;
             NSLog(@"上传分数成功");
         }
     }];
+}
+
+-(void) whetherHighestScores:(uint32_t)score{
+    _isNewRecord = YES;
+    
+    GKLeaderboard *leaderboardRequest = [[GKLeaderboard alloc] init];
+    if (leaderboardRequest != nil){
+        leaderboardRequest.playerScope = GKLeaderboardPlayerScopeGlobal;
+        leaderboardRequest.timeScope = GKLeaderboardTimeScopeAllTime;
+        leaderboardRequest.range = NSMakeRange(1,100);
+        leaderboardRequest.category = KLeaderBoardId;
+        [leaderboardRequest loadScoresWithCompletionHandler: ^(NSArray *scores, NSError *error) {
+            if (error != nil){
+                NSLog(@"下载失败");
+            }
+            
+            if (scores != nil){
+                NSLog(@"下载成功.... scores = %@", scores);
+                for (GKScore *obj in leaderboardRequest.scores) {
+                    if (obj.value >= score) {
+                        _isNewRecord = NO;
+                        NSLog(@"value = %lld, score = %d", obj.value, score);
+                        break;
+                    }
+                }
+            }
+        }];
+    }
 }
 
 //显示排行榜

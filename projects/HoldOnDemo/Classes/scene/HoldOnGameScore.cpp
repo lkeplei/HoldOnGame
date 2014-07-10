@@ -75,19 +75,19 @@ void HoldOnGameScore::initScene(){
 #pragma mark - parent method
 void HoldOnGameScore::showHighScore(){
     HoldOnModel::shareModel()->stopEffect(effectId);    //数字音效结束播放
-    HoldOnModel::shareModel()->playEffect(KEffectTypeNewRecorder);      //新记录音效
-    
-    CCSize winSize = gameLayer->getContentSize();
-    CCSprite* scoreSprite = KenGameUtils::createSprite("score_high.png", ccp(478, winSize.height - 371));
-    gameLayer->addChild(scoreSprite);
+    if (HoldOnModel::shareModel()->getIsNewRecord()) {
+        HoldOnModel::shareModel()->playEffect(KEffectTypeNewRecorder);      //新记录音效
+        
+        CCSize winSize = gameLayer->getContentSize();
+        CCSprite* scoreSprite = KenGameUtils::createSprite("score_high.png", ccp(478, winSize.height - 371));
+        gameLayer->addChild(scoreSprite);
+    }
 }
 
 void HoldOnGameScore::update(float delta){
     if (currentScore <= 0) {
         offsetScore = HoldOnModel::shareModel()->getGameScore() / (25 * KScoreOffTime);
         offsetScore = offsetScore <= 0 ? 1 : offsetScore;
-        
-        CCLOG("offsetScore = %d", offsetScore);
     }
     
     if (currentScore < HoldOnModel::shareModel()->getGameScore()) {
@@ -109,6 +109,7 @@ void HoldOnGameScore::update(float delta){
 
 #pragma mark - menu call back
 void HoldOnGameScore::menuStartGame(CCObject* pSender){
+    HoldOnModel::shareModel()->stopEffect(effectId);    //数字音效结束播放
     HoldOnModel::shareModel()->playEffect(KEffectTypeAnJian);      //按键音效
     
     CCDirector::sharedDirector()->replaceScene(HoldOnGame::scene());
@@ -121,6 +122,7 @@ void HoldOnGameScore::menuGameCenter(CCObject* pSender){
 }
 
 void HoldOnGameScore::menuJumpToHome(CCObject* pSender){
+    HoldOnModel::shareModel()->stopEffect(effectId);    //数字音效结束播放
     HoldOnModel::shareModel()->playEffect(KEffectTypeAnJian);      //按键音效
     
     currentScore = 0;
