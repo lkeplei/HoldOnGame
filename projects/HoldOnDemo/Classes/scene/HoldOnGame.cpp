@@ -365,8 +365,49 @@ void HoldOnGame::checkCollision(){
     for (int i = KBodyTypeRectangleVer; i <= KBodyTypeSquare; i++) {
         CCSprite* sprite = (CCSprite*)gameLayer->getChildByTag(i);
         if (rect.intersectsRect(sprite->boundingBox())) {
-            this->gameOver();
-            break;
+            bool over = true;
+            
+            if (sprite->getTag() == KBodyTypeTriangle) {
+                CCRect sRect = sprite->boundingBox();
+                CCRect rect1 = CCRect(sRect.origin.x + (sRect.size.width * 0.25) / 2 + KBallOffset, sRect.origin.y,
+                                      sRect.size.width * 0.75 - KBallOffset * 2, sRect.size.height * 0.25);
+                if (!rect.intersectsRect(rect1)) {
+                    rect1 = CCRect(sRect.origin.x + sRect.size.width * 0.25 + KBallOffset, sRect.origin.y + sRect.size.height * 0.25,
+                                   sRect.size.width * 0.5 - KBallOffset * 2, sRect.size.height * 0.25);
+                    if (!rect.intersectsRect(rect1)) {
+                        rect1 = CCRect(sRect.origin.x + sRect.size.width * 3 / 8 + KBallOffset, sRect.origin.y + sRect.size.height * 0.5,
+                                       sRect.size.width * 0.25 - KBallOffset* 2, sRect.size.height * 0.25);
+                        if (!rect.intersectsRect(rect1)) {
+                            rect1 = CCRect(sRect.origin.x + sRect.size.width * 0.45, sRect.origin.y + sRect.size.height * 0.75,
+                                           sRect.size.width * 0.1, sRect.size.height * 0.15);
+                            if (!rect.intersectsRect(rect1)) {
+                                over = false;
+                            } else {
+                                CCLOG("44444 rect1 = (%.1f, %.1f, %.1f, %.1f)", rect1.origin.x, rect1.origin.y, rect1.size.width, rect1.size.height);
+                            }
+                        } else {
+                            CCLOG("333333 rect1 = (%.1f, %.1f, %.1f, %.1f)", rect1.origin.x, rect1.origin.y, rect1.size.width, rect1.size.height);
+                        }
+                    } else {
+                        CCLOG("22222222 rect1 = (%.1f, %.1f, %.1f, %.1f)", rect1.origin.x, rect1.origin.y, rect1.size.width, rect1.size.height);
+                    }
+                } else {
+                    CCLOG("1111111 rect1 = (%.1f, %.1f, %.1f, %.1f)", rect1.origin.x, rect1.origin.y, rect1.size.width, rect1.size.height);
+                }
+                
+//                if (over) {
+//                    CCLOG("rect = (%.1f, %.1f, %.1f, %.1f)", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+//                    CCLOG("sRect = (%.1f, %.1f, %.1f, %.1f)", sRect.origin.x, sRect.origin.y, sRect.size.width, sRect.size.height);
+//                    CCLOG("game over");
+////                    this->gameOver();
+//                    break;
+//                }
+            }
+            
+            if (over) {
+                this->gameOver();
+                break;
+            }
         }
     }
 }
@@ -388,10 +429,18 @@ void HoldOnGame::ccTouchMoved(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent
 //        CCPoint translation = ccpSub(touchLocation, oldTouchLocation);
         CCSize ballSize = playerBall->getContentSize();
         CCSize contentSize = gameLayer->getContentSize();
-        if (touchLocation.x > ballSize.width / 2 && touchLocation.x < contentSize.width - ballSize.width / 2
-            && touchLocation.y > ballSize.height / 2 && touchLocation.y < contentSize.height - 140 - ballSize.height / 2) {
-            playerBall->setPosition(touchLocation);
+        float x = playerBall->getPosition().x;
+        float y = playerBall->getPosition().y;
+        
+        if (touchLocation.x > ballSize.width / 2 && touchLocation.x < contentSize.width - ballSize.width / 2){
+            x = touchLocation.x;
         }
+        
+        if (touchLocation.y > ballSize.height / 2 && touchLocation.y < contentSize.height - 140 - ballSize.height / 2) {
+            y = touchLocation.y;
+        }
+        
+        playerBall->setPosition(ccp(x, y));
     }
 }
 
