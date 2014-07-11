@@ -8,6 +8,7 @@
 
 #include "HoldOnAboutUs.h"
 #include "KenGameUtils.h"
+#include "HoldOnModel.h"
 
 CCScene* HoldOnAboutUs::scene()
 {
@@ -52,10 +53,16 @@ void HoldOnAboutUs::initScene(){
     CCMenu* pMenu = CCMenu::create(item1, item2, NULL);
     pMenu->setPosition(CCPointZero);
     gameLayer->addChild(pMenu, 1);
+    
+    //添加广告
+    HoldOnModel::shareModel()->resetAd();
 }
 
 #pragma mark - menu call back
 void HoldOnAboutUs::menuBack(CCObject* pSender){
+    //去除广告
+    HoldOnModel::shareModel()->removeAd();
+    
     CCDirector::sharedDirector()->popScene();
 }
 

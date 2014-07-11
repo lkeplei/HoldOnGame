@@ -32,7 +32,7 @@ CCLabelTTF* KenGameUtils::createLabel(const char* string, const char* fontName, 
 CCLabelAtlas* KenGameUtils::createLabelAtlas(const char* string, const CCPoint& postion, bool small){
     CCLabelAtlas* atlas = NULL;
     if (small) {
-        atlas = CCLabelAtlas::create(string, "app_font_small.png", 24, 34, '0');
+        atlas = CCLabelAtlas::create(string, "app_font_small.png", 24, 34, '.');
     } else {
         atlas = CCLabelAtlas::create(string, "app_font_big.png", 54, 74, '0');
     }

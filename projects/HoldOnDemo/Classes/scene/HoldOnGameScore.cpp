@@ -70,6 +70,10 @@ void HoldOnGameScore::initScene(){
     this->scheduleUpdate();     //开启计时刷新
     
     effectId = HoldOnModel::shareModel()->playEffect(KEffectTypeNumberRoll, true);    //数字滚动音效播放
+    
+    //添加广告
+    HoldOnModel::shareModel()->resetAd();
+    HoldOnModel::shareModel()->showFullAd();
 }
 
 #pragma mark - parent method
@@ -112,6 +116,10 @@ void HoldOnGameScore::menuStartGame(CCObject* pSender){
     HoldOnModel::shareModel()->stopEffect(effectId);    //数字音效结束播放
     HoldOnModel::shareModel()->playEffect(KEffectTypeAnJian);      //按键音效
     
+    //去除广告
+    HoldOnModel::shareModel()->removeAd();
+    HoldOnModel::shareModel()->cancelFullAd();
+    
     CCDirector::sharedDirector()->replaceScene(HoldOnGame::scene());
 }
 
@@ -124,6 +132,10 @@ void HoldOnGameScore::menuGameCenter(CCObject* pSender){
 void HoldOnGameScore::menuJumpToHome(CCObject* pSender){
     HoldOnModel::shareModel()->stopEffect(effectId);    //数字音效结束播放
     HoldOnModel::shareModel()->playEffect(KEffectTypeAnJian);      //按键音效
+    
+    //去除广告
+    HoldOnModel::shareModel()->removeAd();
+    HoldOnModel::shareModel()->cancelFullAd();
     
     currentScore = 0;
     CCDirector::sharedDirector()->replaceScene(HoldOnHome::scene());

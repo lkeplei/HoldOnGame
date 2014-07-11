@@ -13,6 +13,7 @@
 #import "KENDataManager.h"
 #import "GameKitHelper.h"
 #import "MobClick.h"
+#import "RootViewController.h"
 
 static HoldOnModel* s_ShareModel = NULL;
 
@@ -31,6 +32,8 @@ HoldOnModel::HoldOnModel()
 
 , levelTime(0)
 , scoreTime(0)
+
+, playGameTimes(0)
 {
 
 };
@@ -45,6 +48,10 @@ void HoldOnModel::initData(){
         [KENDataManager setDataByKey:[NSNumber numberWithBool:YES] forkey:KUserDefaultSetOpenVoice];
     }
     
+    if ([KENDataManager getDataByKey:KUserDefaultSetBestScore] == nil) {
+        [KENDataManager setDataByKey:[NSNumber numberWithInt:0] forkey:KUserDefaultSetBestScore];
+    }
+    
     //初始友盟统计
 //    [MobClick setCrashReportEnabled:NO]; // 如果不需要捕捉异常，注释掉此行
 //    [MobClick setLogEnabled:YES];  // 打开友盟sdk调试，注意Release发布时需要注释掉此行,减少io消耗
@@ -55,6 +62,9 @@ void HoldOnModel::initData(){
     } else {
         [MobClick startWithAppkey:@"53bcd00d56240b0c1b01f0c4"];
     }
+    
+    //初始全屏广告
+    [SysDelegate.viewController initFullMogo];
 }
 
 void HoldOnModel::showGameCenterLoader(){
@@ -63,8 +73,19 @@ void HoldOnModel::showGameCenterLoader(){
 }
 
 void HoldOnModel::reportScore(){
-    [[GameKitHelper sharedGameKitHelper] reportScore:gameScore];
-    [[GameKitHelper sharedGameKitHelper] whetherHighestScores:gameScore];
+    int bestScore = [[KENDataManager getDataByKey:KUserDefaultSetBestScore] intValue];
+    if (gameScore > bestScore) {
+        bestScore = gameScore;
+        [KENDataManager setDataByKey:[NSNumber numberWithInt:gameScore] forkey:KUserDefaultSetBestScore];
+        
+        [[GameKitHelper sharedGameKitHelper] whetherHighestScores:gameScore];
+    } else {
+        [[GameKitHelper sharedGameKitHelper] setIsNewRecord:NO];
+    }
+    
+    [[GameKitHelper sharedGameKitHelper] reportScore:bestScore];
+    
+    playGameTimes++;
 }
 
 bool HoldOnModel::getIsNewRecord(){
@@ -111,6 +132,29 @@ float HoldOnModel::getBodyVelocity(HoldOnBodyType type){
     }
     
     return velocity;
+}
+
+#pragma mark - about Ad
+void HoldOnModel::resetAd(){
+    [SysDelegate.viewController resetAd];
+}
+
+void HoldOnModel::removeAd(){
+    [SysDelegate.viewController removeAd];
+}
+
+void HoldOnModel::showFullAd(){
+    if (playGameTimes % 3 == 0) {
+        [SysDelegate.viewController showFullAd];
+    }
+}
+
+void HoldOnModel::cancelFullAd(){
+    [SysDelegate.viewController cancelFullAd];
+}
+
+void HoldOnModel::clearAllAd(){
+    [SysDelegate.viewController clearAllAd];
 }
 
 #pragma mark - music

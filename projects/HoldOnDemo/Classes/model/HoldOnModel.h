@@ -36,6 +36,13 @@ public:
     void closeEffect();
     void openEffect();
     
+    //about Ad
+    void resetAd();
+    void removeAd();
+    void showFullAd();
+    void cancelFullAd();
+    void clearAllAd();
+    
     void resetLevelScore();
     void updateGameTime(float delta);
     void countGameScore();
@@ -49,6 +56,7 @@ private:
     uint16_t gameLevel;
     double gameTime;
     uint32_t gameScore;
+    uint16_t playGameTimes;
     
     float levelTime;
     float scoreTime;
