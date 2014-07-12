@@ -22,6 +22,7 @@ public:
     typedef enum {
         KGameStatusNull = 0,
         KGameStatusGaming,
+        KGameStatusCheck,
         KGameStatusOver,
     } GameStatus;
     

@@ -461,6 +461,8 @@ void HoldOnGame::registerWithTouchDispatcher(){
 
 #pragma mark - menu call back
 void HoldOnGame::menuBack(CCObject* pSender){
+    HoldOnModel::shareModel()->stopBackgroundMusic();   //停止播放背景音乐
+    
     CCDirector::sharedDirector()->replaceScene(HoldOnHome::scene());
 }
 

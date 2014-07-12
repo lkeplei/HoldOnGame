@@ -144,7 +144,7 @@ void HoldOnModel::removeAd(){
 }
 
 void HoldOnModel::showFullAd(){
-    if (playGameTimes % 3 == 0) {
+    if (playGameTimes % 3 == 1) {
         [SysDelegate.viewController showFullAd];
     }
 }
