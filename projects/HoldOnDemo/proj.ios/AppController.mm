@@ -4,6 +4,9 @@
 #import "AppDelegate.h"
 #import "RootViewController.h"
 
+#import "Reachability.h"
+#include "HoldOnModel.h"
+
 @implementation AppController
 
 #pragma mark -
@@ -51,9 +54,23 @@ static AppDelegate s_sharedApplication;
     
     cocos2d::CCApplication::sharedApplication()->run();
 
+    
+    // 监测网络情况
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reachabilityChanged:)
+                                                 name: kReachabilityChangedNotification
+                                               object: nil];
+    [[Reachability reachabilityWithHostName:@"www.baidu.com"] startNotifier];
+    
     return YES;
 }
 
+#pragma mark - net check
+- (void)reachabilityChanged:(NSNotification *)note {
+    Reachability* curReach = [note object];
+    NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
+    HoldOnModel::shareModel()->setCurrentNetStatus([curReach currentReachabilityStatus]);
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     /*

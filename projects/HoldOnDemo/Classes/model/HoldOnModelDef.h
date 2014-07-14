@@ -27,4 +27,10 @@ typedef enum {
     KBodyTypeSquare,                    //正方形
 } HoldOnBodyType;
 
+typedef enum {
+    HoldOnNetNotReachable = 0,
+    HoldOnNetReachableViaWiFi,
+    HoldOnNetReachableViaWWAN,
+} HoldOnNetType;
+
 #endif // _HOLDONMODEL_DEF_H_

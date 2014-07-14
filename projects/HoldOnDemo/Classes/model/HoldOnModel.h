@@ -21,6 +21,9 @@ public:
     static HoldOnModel* shareModel(void);
     
 public:
+    void checkCurrentNetStatus();
+    void setCurrentNetStatus(uint32_t status);
+    
     void reportScore();
     void showGameCenterLoader();
     
@@ -60,6 +63,8 @@ private:
     
     float levelTime;
     float scoreTime;
+    
+    HoldOnNetType netType;
 };
 
 #endif // _HOLDONMODEL_H_

@@ -236,6 +236,7 @@
 		041FF0B6196ED05400D5D679 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 041FF0B5196ED05400D5D679 /* MapKit.framework */; };
 		041FF0B8196ED06500D5D679 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 041FF0B7196ED06500D5D679 /* libsqlite3.dylib */; };
 		041FF0BA196ED07700D5D679 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 041FF0B9196ED07700D5D679 /* SystemConfiguration.framework */; };
+		04489D501972CDD200832E6D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 04489D4F1972CDD200832E6D /* Reachability.m */; };
 		0474DD8D19695C56003B99D8 /* app_font_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0474DD8B19695C56003B99D8 /* app_font_small.png */; };
 		0474DD8E19695C56003B99D8 /* app_font_big.png in Resources */ = {isa = PBXBuildFile; fileRef = 0474DD8C19695C56003B99D8 /* app_font_big.png */; };
 		15A3D8FF1682F7D5002FB0C5 /* b2BroadPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15A3D88B1682F7D5002FB0C5 /* b2BroadPhase.cpp */; };
@@ -923,6 +924,8 @@
 		041FF0B5196ED05400D5D679 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		041FF0B7196ED06500D5D679 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		041FF0B9196ED07700D5D679 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		04489D4E1972CDD200832E6D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		04489D4F1972CDD200832E6D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		0474DD8B19695C56003B99D8 /* app_font_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_font_small.png; sourceTree = "<group>"; };
 		0474DD8C19695C56003B99D8 /* app_font_big.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_font_big.png; sourceTree = "<group>"; };
 		15A3D87E1682F7B3002FB0C5 /* cocos2dx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2dx.xcodeproj; path = ../../../cocos2dx/proj.ios/cocos2dx.xcodeproj; sourceTree = "<group>"; };
@@ -2869,6 +2872,8 @@
 		1829C00D196521050046FDE5 /* tools */ = {
 			isa = PBXGroup;
 			children = (
+				04489D4E1972CDD200832E6D /* Reachability.h */,
+				04489D4F1972CDD200832E6D /* Reachability.m */,
 				041FEE4E196ECEFC00D5D679 /* AdSDK */,
 				041FEF26196ECEFC00D5D679 /* AdsMoGoSDK */,
 				18A535C6196D2EB400997759 /* UM */,
@@ -3943,6 +3948,7 @@
 				041FEFB6196ECEFD00D5D679 /* CJSONDeserializer_BlocksExtensions.m in Sources */,
 				15A3D91D1682F7D5002FB0C5 /* b2EdgeAndPolygonContact.cpp in Sources */,
 				15A3D91E1682F7D5002FB0C5 /* b2PolygonAndCircleContact.cpp in Sources */,
+				04489D501972CDD200832E6D /* Reachability.m in Sources */,
 				041FEFB9196ECEFD00D5D679 /* CDataScanner_Extensions.m in Sources */,
 				15A3D91F1682F7D5002FB0C5 /* b2PolygonContact.cpp in Sources */,
 				38FA2EB4194EA58000FF2BE4 /* CCTimeLine.cpp in Sources */,

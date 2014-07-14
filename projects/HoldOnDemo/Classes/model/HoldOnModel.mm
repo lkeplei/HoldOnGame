@@ -15,6 +15,8 @@
 #import "MobClick.h"
 #import "RootViewController.h"
 
+#import "Reachability.h"
+
 static HoldOnModel* s_ShareModel = NULL;
 
 HoldOnModel* HoldOnModel::shareModel(){
@@ -34,6 +36,7 @@ HoldOnModel::HoldOnModel()
 , scoreTime(0)
 
 , playGameTimes(0)
+, netType(HoldOnNetNotReachable)
 {
 
 };
@@ -67,12 +70,51 @@ void HoldOnModel::initData(){
     [SysDelegate.viewController initFullMogo];
 }
 
+void HoldOnModel::setCurrentNetStatus(uint32_t status){
+    switch (status) {
+        case ReachableViaWiFi:{
+            netType = HoldOnNetReachableViaWiFi;  //wifi
+        }
+            break;
+        case ReachableViaWWAN:{
+            netType = HoldOnNetReachableViaWWAN;  //3g
+        }
+            break;
+        case NotReachable:
+        default:{
+            netType = HoldOnNetNotReachable;  //not reachable
+        }
+            break;
+    }
+}
+
+void HoldOnModel::checkCurrentNetStatus(){
+    Reachability *reach = [Reachability reachabilityWithHostName:@"www.baidu.com"];
+    switch ([reach currentReachabilityStatus]) {
+        case ReachableViaWiFi:{
+            netType = HoldOnNetReachableViaWiFi;  //wifi
+        }
+            break;
+        case ReachableViaWWAN:{
+            netType = HoldOnNetReachableViaWWAN;  //3g
+        }
+            break;
+        case NotReachable:
+        default:{
+            netType = HoldOnNetNotReachable;  //not reachable
+        }
+            break;
+    }
+}
+
 void HoldOnModel::showGameCenterLoader(){
     //显示排行榜
     [[GameKitHelper sharedGameKitHelper] showLeaderboard];
 }
 
 void HoldOnModel::reportScore(){
+    checkCurrentNetStatus();
+    
     int bestScore = [[KENDataManager getDataByKey:KUserDefaultSetBestScore] intValue];
     if (gameScore > bestScore) {
         bestScore = gameScore;
@@ -136,7 +178,9 @@ float HoldOnModel::getBodyVelocity(HoldOnBodyType type){
 
 #pragma mark - about Ad
 void HoldOnModel::resetAd(){
-    [SysDelegate.viewController resetAd];
+    if (playGameTimes % 3 != 1) {
+        [SysDelegate.viewController resetAd];
+    }
 }
 
 void HoldOnModel::removeAd(){

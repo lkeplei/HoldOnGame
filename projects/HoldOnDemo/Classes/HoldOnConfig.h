@@ -18,7 +18,7 @@
 
 
 #define PTM_RATIO  (32.0)
-#define KInitialVelocity        (5)         //障碍物初始速度
+#define KInitialVelocity        (6)         //障碍物初始速度
 #define KScoreOffTime           (3)         //得分动画时间
 #define KBallOffset             (8)         //小球矩形偏差
 

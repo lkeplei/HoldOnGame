@@ -256,10 +256,17 @@ void HoldOnGame::startGame(){
 }
 
 void HoldOnGame::gameOver(){
+    if (currentGameStatus == KGameStatusGaming) {
+        currentGameStatus = KGameStatusCheck;
+        return;
+    }
+    
     currentGameStatus = KGameStatusOver;
     static int step = 0;
     switch (step) {
         case 0:{
+            this->unscheduleUpdate();   //停止刷新
+            
             HoldOnModel::shareModel()->countGameScore();
             HoldOnModel::shareModel()->stopBackgroundMusic();   //停止播放背景音乐
             HoldOnModel::shareModel()->playEffect(KEffectTypeGameOver);      //游戏结束音效
@@ -295,7 +302,8 @@ void HoldOnGame::gameOver(){
         }
             break;
         case 2:{
-            CCDirector::sharedDirector()->replaceScene(HoldOnGameScore::scene());
+            CCScene* scoreScene = HoldOnGameScore::scene();
+            CCDirector::sharedDirector()->replaceScene(scoreScene);
             
             step = 0;
         }
@@ -321,6 +329,9 @@ void HoldOnGame::update(float delta){
         this->updateScoreLevel(delta);
         this->updateBody(delta);
         this->checkCollision();
+    } else if (currentGameStatus == KGameStatusCheck) {
+        this->updateBody(delta);
+        this->gameOver();
     }
 }
 

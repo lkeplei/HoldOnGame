@@ -73,11 +73,13 @@ void HoldOnGameScore::initScene(){
     
     //添加广告
     HoldOnModel::shareModel()->resetAd();
-    HoldOnModel::shareModel()->showFullAd();
+//    HoldOnModel::shareModel()->showFullAd();
 }
 
 #pragma mark - parent method
 void HoldOnGameScore::showHighScore(){
+    HoldOnModel::shareModel()->showFullAd();
+    
     HoldOnModel::shareModel()->stopEffect(effectId);    //数字音效结束播放
     if (HoldOnModel::shareModel()->getIsNewRecord()) {
         HoldOnModel::shareModel()->playEffect(KEffectTypeNewRecorder);      //新记录音效
